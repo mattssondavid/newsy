@@ -3,17 +3,19 @@ version: '3'
 services:
   mysql:
     image: 'mariadb:latest'
-    environment: 
+    environment:
       MYSQL_ROOT_PASSWORD: 'dbpassword'
     volumes:
-      - mariadb:/var/lib/mysql      
-  
+      - mariadb:/var/lib/mysql
+
   wordpress:
     image: 'wordpress:latest'
     ports:
       - '8080:80'
     environment:
       WORDPRESS_DB_PASSWORD: 'dbpassword'
+    volumes:
+      - ./theme:/var/www/html/wp-content/themes/newsy
 
 volumes:
   mariadb:
