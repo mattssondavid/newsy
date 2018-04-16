@@ -12,5 +12,6 @@
     }
     ?>
     </header>
-    <div><?php the_content(); ?></div>
+    <section><?php the_content(); ?></section>
+    <footer></footer>
 </article>
