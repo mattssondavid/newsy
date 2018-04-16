@@ -15,7 +15,7 @@ services:
     environment:
       WORDPRESS_DB_PASSWORD: 'dbpassword'
     volumes:
-      - ./dist/theme:/var/www/html/wp-content/themes/newsy
+      - ./dist:/var/www/html/wp-content/themes/newsy
 
 volumes:
   mariadb:
