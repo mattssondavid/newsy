@@ -13,6 +13,9 @@
         include(dirname(__FILE__) . '/assets/style/critical.css');
     ?>
     </style>
+    <script type="module" src="<?= get_template_directory_uri(); ?>/index.js"></script>
+    <script type="text/javascript" src="<?= get_template_directory_uri(); ?>/custom-elements.min.js" nomodule></script>
+    <script type="text/javascript" src="<?= get_template_directory_uri(); ?>/legacy.js" nomodule defer></script>
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
