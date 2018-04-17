@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An attemt to build a WordPress theme using WP-Rest and based upon Web Components">
     <style>
     <?php
         include(dirname(__FILE__) . '/assets/style/critical.css');
@@ -29,6 +30,7 @@
     } else {
         get_template_part('wp_template_partials/post/content', 'none');
     }
+    wp_footer();
     ?>
 </body>
 </html>
