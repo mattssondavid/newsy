@@ -12,10 +12,6 @@ module.exports = {
         new CopyWebpackPlugin([{
             from: path.resolve(__dirname, 'node_modules/@webcomponents/custom-elements/custom-elements.min.js'),
             to: path.resolve(__dirname, 'dist')
-        }]),
-        // new CopyWebpackPlugin([{ // Copy "src" to "dist", so browsers that understand the raw data doesn't need legacy.js
-        //     from: 'src/**/*',
-        //     to: 'dist'
-        // }])
+        }])
     ]
 }
