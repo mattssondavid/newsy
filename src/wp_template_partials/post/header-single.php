@@ -1,5 +1,5 @@
 <?php
 ?>
 <header>
-    <h1><?php single_post_title(); ?></h1>
+    <h1>Single post top header</h1>
 </header>

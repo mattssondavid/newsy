@@ -1,5 +1,5 @@
 <?php
 ?>
 <header>
-    <h2><?php _e('Posts', 'newsy'); ?></h2>
+    <h2>Multiple posts header</h2>
 </header>

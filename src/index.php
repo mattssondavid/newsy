@@ -20,10 +20,10 @@
 </head>
 <body <?php body_class(); ?>>
     <?php
-    if (is_home() && !is_front_page()) {
-        get_template_part('wp_template_partials/post/header', 'single');
-    } else {
+    if (is_home() && is_front_page()) {
         get_template_part('wp_template_partials/post/header', 'nonsingle');
+    } else {
+        get_template_part('wp_template_partials/post/header', 'single');
     }
     if (have_posts()) {
         while (have_posts()) {
@@ -33,6 +33,7 @@
     } else {
         get_template_part('wp_template_partials/post/content', 'none');
     }
+    get_template_part('wp_template_partials/post/footer', '');
     wp_footer();
     ?>
 </body>
