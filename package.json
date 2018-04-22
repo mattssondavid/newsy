@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-modules --no-warnings src/tests.mjs | tap -Rspec -",
     "build": "webpack && cp -r src/* dist/"
   },
   "repository": {
@@ -19,7 +19,9 @@
   "homepage": "https://github.com/mattssondavid/newsy#readme",
   "devDependencies": {
     "@webcomponents/custom-elements": "^1.1.0",
+    "chai": "^4.1.2",
     "copy-webpack-plugin": "^4.5.1",
+    "tap": "^11.1.4",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
   }
