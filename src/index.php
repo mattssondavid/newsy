@@ -28,7 +28,11 @@
     if (have_posts()) {
         while (have_posts()) {
             the_post();
-            get_template_part('wp_template_partials/post/content', get_post_format());
+            if (is_home() && is_front_page()) {
+                get_template_part('wp_template_partials/post/content', 'teaser');
+            } else {
+                get_template_part('wp_template_partials/post/content', get_post_format());
+            }
         }
     } else {
         get_template_part('wp_template_partials/post/content', 'none');
