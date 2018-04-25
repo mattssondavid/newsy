@@ -2,20 +2,29 @@ version: '3'
 
 services:
   mysql:
+    container_name: newsy_db
     image: 'mariadb:latest'
     environment:
-      MYSQL_ROOT_PASSWORD: 'dbpassword'
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mariadb:/var/lib/mysql
 
   wordpress:
-    image: 'wordpress:latest'
+    container_name: newsy_wp
+    build: .
     ports:
-      - '8080:80'
+      - 127.0.1:8080:80
+      - 127.0.1:443:443
     environment:
-      WORDPRESS_DB_PASSWORD: 'dbpassword'
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./dist:/var/www/html/wp-content/themes/newsy
+      - ./wp_uploads:/var/www/html/wp-content/uploads
+    depends_on:
+      - mysql
 
 volumes:
   mariadb:
+
+# Attemt to make SSL work with points from https://github.com/docker-library/wordpress/issues/46
+# Doesn't seem to work, perhaps try with nginx-proxy? https://dev.to/foresthoffman/hosting-wordpress-over-https-with-docker-5gc
