@@ -1,0 +1,2 @@
+# Allow JavaScript Module (ESM) .mjs files to be treated as JavaScript
+AddType application/javascript .js .mjs
