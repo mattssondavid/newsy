@@ -5,7 +5,7 @@
   "main": "./src/index.mjs",
   "scripts": {
     "test": "node --experimental-modules --no-warnings src/tests.mjs | tap -Rspec -",
-    "build": "webpack && cp -R src/* dist/"
+    "build": "webpack && cp -rv src/* dist/ && cp -v src/.htaccess dist/"
   },
   "repository": {
     "type": "git",
