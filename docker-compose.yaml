@@ -25,6 +25,3 @@ services:
 
 volumes:
   mariadb:
-
-# Attemt to make SSL work with points from https://github.com/docker-library/wordpress/issues/46
-# Doesn't seem to work, perhaps try with nginx-proxy? https://dev.to/foresthoffman/hosting-wordpress-over-https-with-docker-5gc
