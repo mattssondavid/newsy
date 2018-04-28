@@ -1,10 +1,21 @@
-FROM wordpress:latest
+FROM wordpress:4.9.5-php7.2-apache
 
-# https://this.dev SSL
-# Point your network hosts to: 127.0.0.1  this.dev
+# https://this.localhost SSL
+# Point your network hosts to: 127.0.0.1  this.localhost
 # Certificates created following https://letsencrypt.org/docs/certificates-for-localhost/
-COPY etc/ssh/this.dev.key /etc/ssl/certs/private/
-COPY etc/ssh/this.dev.crt /etc/ssl/certs/
+RUN echo "[dn]\nCN=this.localhost\n[req]\ndistinguished_name = dn\n[SAN]\nsubjectAltName=DNS:this.localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth" > /root/cert.config
+RUN mkdir -p /etc/ssl/certs/private/ && \
+	openssl req -x509 \
+	-newkey rsa:2048 \
+	-nodes \
+	-sha256 \
+	-days 365 \
+	-keyout /etc/ssl/certs/private/this.localhost.key \
+	-out /etc/ssl/certs/this.localhost.crt \
+	-subj '/CN=this.localhost' \
+	-extensions SAN \
+	-reqexts SAN \
+	-config /root/cert.config
 
 # Apache config
 COPY etc/apache/apache2.conf /etc/apache2/
