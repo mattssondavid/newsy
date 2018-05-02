@@ -51,3 +51,31 @@ add_action('template_redirect', function () {
         wp_send_json($manifest);
     }
 });
+
+/**
+ * Get the post's images attachments. If the post has a set featured image then
+ * set that as the first WP_Post instance
+ *
+ * @param int $postId
+ *
+ * @return \WP_Post[]
+ */
+function getAttachedImages(int $postId)
+{
+    $attachments = get_attached_media('image', $postId);
+    if (has_post_thumbnail($postId)) {
+        $featured_image = get_post(get_post_thumbnail_id($postId));
+        if (is_object($featured_image)) {
+            $ids = array_map(
+                function ($wpPost) {
+                    return $wpPost->ID;
+                },
+                $attachments
+            );
+            $featured_image_index = array_search($featured_image->ID, $ids);
+            unset($attachments[$featured_image_index]);
+            $attachments = array_merge([$featured_image], $attachments);
+        }
+    }
+    return $attachments;
+}
