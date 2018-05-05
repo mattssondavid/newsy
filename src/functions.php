@@ -46,6 +46,18 @@ add_action('template_redirect', function () {
             'short_name' => get_bloginfo('name'),
             'start_url' => get_bloginfo('url'),
             'theme_color' => $theme_colour,
+            'icons' => [
+                [
+                    'src' => 'assets/icon/launcher_icon_192.png',
+                    'type' => 'image/png',
+                    'sizes' => '192x192'
+                ],
+                [
+                    'src' => 'assets/icon/launcher_icon_512.png',
+                    'type' => 'image/png',
+                    'sizes' => '512x512'
+                ],
+            ],
         ];
         wp_send_json($manifest);
     }
