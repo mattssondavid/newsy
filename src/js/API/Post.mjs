@@ -1,4 +1,4 @@
-import { WPRestHome } from '../Util/WPRestHome.mjs';
+import WPRestHome from '../Util/WPRestHome.mjs';
 
 export function getPosts() {
     const path = 'wp/v2/posts';
@@ -14,7 +14,5 @@ export function getPosts() {
             }
             throw new TypeError('Wrong type');
         })
-        .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(error => console.error(error));
+        .then(response => response.json());
 };
