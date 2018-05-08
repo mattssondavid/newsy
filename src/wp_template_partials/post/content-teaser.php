@@ -1,5 +1,6 @@
 <?php
 ?>
+<newsy-teaser></newsy-teaser>
 <article>
     <?php if (has_post_thumbnail()) {
         $thumbnail_post = get_post(get_post_thumbnail_id());
