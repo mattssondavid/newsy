@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node --experimental-modules --no-warnings src/tests.mjs | tap -Rspec -",
     "build": "webpack && cp -rv src/* dist/ && cp -v src/.htaccess dist/",
-    "clean": "rm -r dist"
+    "clean": "rm -r dist && mkdir dist"
   },
   "repository": {
     "type": "git",
