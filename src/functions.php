@@ -48,12 +48,12 @@ add_action('template_redirect', function () {
             'theme_color' => $theme_colour,
             'icons' => [
                 [
-                    'src' => 'assets/icon/launcher_icon_192.png',
+                    'src' => get_template_directory_uri() . '/assets/icon/launcher_icon_192.png',
                     'type' => 'image/png',
                     'sizes' => '192x192'
                 ],
                 [
-                    'src' => 'assets/icon/launcher_icon_512.png',
+                    'src' => get_template_directory_uri() . '/assets/icon/launcher_icon_512.png',
                     'type' => 'image/png',
                     'sizes' => '512x512'
                 ],
@@ -90,3 +90,18 @@ function getAttachedImages(int $postId)
     }
     return $attachments;
 }
+
+/**
+ * Populate the theme's inline header CSS
+ * The function should echo its results
+ *
+ * @return void
+ */
+add_action(
+    'header_inline_css',
+    function () {
+        include(dirname(__FILE__) . '/assets/style/critical.css');
+    },
+    10,
+    0
+);
