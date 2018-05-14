@@ -1,5 +1,6 @@
 <?php
 ?>
-<header>
+<newsy-header></newsy-header>
+<newsy-hero>
     <h2>Multiple posts header</h2>
-</header>
+</newsy-hero>
