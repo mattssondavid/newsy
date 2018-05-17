@@ -6,7 +6,7 @@ import {getImage} from '../../API/Image.mjs';
 const template = document.createElement('template');
 template.innerHTML = `
     <a>
-        <img />
+        <progressive-img/>
     </a>
     <header>
         <h3>
@@ -101,7 +101,7 @@ class Teaser extends HTMLElement {
 
         if (this._post.featured_media_data !== null) {
             if (this._post.featured_media_data.media_details.hasOwnProperty('sizes')) {
-                const image = this.shadowRoot.querySelector('a > img');
+                const image = this.shadowRoot.querySelector('a > progressive-img');
                 image.alt = this._post.featured_media_data.alt_text;
                 image.width = this._post.featured_media_data.media_details.sizes.medium.width;
                 image.height = this._post.featured_media_data.media_details.sizes.medium.height;
