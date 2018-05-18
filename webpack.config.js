@@ -10,8 +10,8 @@ module.exports = {
     },
     plugins: [
         new CopyWebpackPlugin([{
-            from: path.resolve(__dirname, 'node_modules/@webcomponents/custom-elements/custom-elements.min.js'),
-            to: path.resolve(__dirname, 'dist')
+            from: path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs'),
+            to: path.resolve(__dirname, 'dist/node_modules/webcomponentsjs/')
         }])
     ]
 }
