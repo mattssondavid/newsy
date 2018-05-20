@@ -3,13 +3,15 @@ import customElements from '../../Util/CustomElements.mjs';
 const template = document.createElement('template');
 template.innerHTML = `
     <style></style>
-    <img/>
+    <img>
 `;
 
-class ProgressiveImage extends HTMLImageElement {
+class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
         return [
             'loaded',
+            'src',
+            'thumbnailsrc'
         ];
     }
 
@@ -17,14 +19,16 @@ class ProgressiveImage extends HTMLImageElement {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this._img = this.shadowRoot.querySelector('img');
     }
 
     connectedCallback() {
-        this._liftAttribute('thumbnail-src');
-        const imageBuffer = new Image();
-        imageBuffer.onload = this._onLoad;
-        imageBuffer.src = this.src;
-        imageBuffer.srcset = this.srcset;
+        this._liftAttribute('thumbnailsrc');
+        this._liftAttribute('src');
+        this._liftAttribute('alt');
+        this._liftAttribute('width');
+        this._liftAttribute('height');
     }
 
     disconnectedCallback() {
@@ -34,9 +38,22 @@ class ProgressiveImage extends HTMLImageElement {
         const hasNewValue = newValue !== null;
         const valueHasChanged = oldValue !== newValue;
         switch (attrName) {
-            case 'thumbnail-src':
+            case 'thumbnailsrc':
                 if (hasNewValue && valueHasChanged) {
-                    this._render();
+                    const image = this._createImage(this.thumbnailsrc, (_) => {
+                        console.log('preview image ready');
+                        this._img = image;
+                    });
+                }
+                break;
+
+            case 'src':
+                if (hasNewValue && valueHasChanged) {
+                    const image = this._createImage(this.src, (_) => {
+                        console.log('true image ready');
+                        this._img = image;
+                        this.loaded = true;
+                    });
                 }
                 break;
 
@@ -45,12 +62,20 @@ class ProgressiveImage extends HTMLImageElement {
         }
     }
 
-    get thumbnail() {
-        return this.getAttribute('thumbnail-src');
+    get alt() {
+        return this._img.getAttribute('alt');
     }
 
-    set thumbnail(value) {
-        this.setAttribute('thumbnail-src', value);
+    set alt(value) {
+        this._img.setAttribute('alt', value);
+    }
+
+    get thumbnailsrc() {
+        return this.getAttribute('thumbnailsrc');
+    }
+
+    set thumbnailsrc(value) {
+        this.setAttribute('thumbnailsrc', value);
     }
 
     get loaded() {
@@ -66,6 +91,32 @@ class ProgressiveImage extends HTMLImageElement {
         }
     }
 
+    get src() {
+        return this.getAttribute('src');
+    }
+
+    set src(value) {
+        this.setAttribute('src', value);
+    }
+
+    get height() {
+        return this.getAttribute('height');
+    }
+
+    set height(value) {
+        this._img.setAttribute('height', value);
+        this.setAttribute('height', value);
+    }
+
+    get width() {
+        return this.getAttribute('width');
+    }
+
+    set width(value) {
+        this._img.setAttribute('width', value);
+        this.setAttribute('width', value);
+    }
+
     _liftAttribute(attribute) {
         if (this.hasOwnProperty(attribute)) {
             const originalAttribute = this[attribute];
@@ -74,29 +125,41 @@ class ProgressiveImage extends HTMLImageElement {
         }
     }
 
-    _onLoad() {
-        this.loaded = true;
-    }
-
-    _render() {
-        const image = this.shadowRoot.querySelector('img');
-        if (!this.loaded) {
-            this._getAttributesArray
-                .filter((value, name) => {
-                    return name !== 'src';
-                })
-                .map((value, name) => this[name] = value);
-            this.src = this.thumbnail;
-        } else {
-            this._getAttributesArray
-                .map((value, name) => this[name] = value);
-        }
+    _createImage(src, onLoadFn) {
+        const imageBuffer = new Image();
+        const attrs = this._getAttributesArray()
+            .filter((value) => {
+                return value.name !== 'src';
+            })
+            .map((value) => {
+                this[value.name] = value.value
+                return value;
+            })
+            .map((value) => {
+                imageBuffer[value.name] = value.value;
+                console.log(`${value.name} => ${value.value}`);
+                return value;
+            });
+        imageBuffer.onload = onLoadFn;
+        imageBuffer.src = src;
+        return imageBuffer;
     }
 
     _getAttributesArray() {
         return Array.prototype.slice.call(this.attributes);
     }
 }
-customElements.define('progressive-img', ProgressiveImage, {extends: 'img'});
+customElements.define('progressive-img', ProgressiveImage);
 
 export default ProgressiveImage;
+
+/*
+
+https://www.sitepoint.com/how-to-build-your-own-progressive-image-loader/
+
+https://jmperezperez.com/more-progressive-image-loading/
+https://codepen.io/jmperez/pen/yYjPER
+
+https://github.com/GoogleChromeLabs/ui-element-samples/blob/gh-pages/lazy-image/static/sc-img.js
+
+*/

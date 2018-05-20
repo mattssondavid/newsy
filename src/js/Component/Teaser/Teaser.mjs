@@ -6,7 +6,7 @@ import {getImage} from '../../API/Image.mjs';
 const template = document.createElement('template');
 template.innerHTML = `
     <a>
-        <progressive-img/>
+        <progressive-img></progressive-img>
     </a>
     <header>
         <h3>
@@ -106,6 +106,7 @@ class Teaser extends HTMLElement {
                 image.width = this._post.featured_media_data.media_details.sizes.medium.width;
                 image.height = this._post.featured_media_data.media_details.sizes.medium.height;
                 image.src = this._post.featured_media_data.media_details.sizes.medium.source_url;
+                image.thumbnailsrc = this._post.featured_media_data.media_details.sizes.thumbnail.source_url;
                 const imageLink = this.shadowRoot.querySelector('a');
                 imageLink.href = this._post.link;
             }
