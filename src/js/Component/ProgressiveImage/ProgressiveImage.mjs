@@ -41,7 +41,8 @@ class ProgressiveImage extends HTMLElement {
             case 'thumbnailsrc':
                 if (hasNewValue && valueHasChanged) {
                     const image = this._createImage(this.thumbnailsrc, (_) => {
-                        console.log('preview image ready');
+                        console.log('preview image ready', image);
+                        this._img.parentNode.replaceChild(image, this._img);
                         this._img = image;
                     });
                 }
@@ -50,7 +51,8 @@ class ProgressiveImage extends HTMLElement {
             case 'src':
                 if (hasNewValue && valueHasChanged) {
                     const image = this._createImage(this.src, (_) => {
-                        console.log('true image ready');
+                        console.log('true image ready', image);
+                        this._img.parentNode.replaceChild(image, this._img);
                         this._img = image;
                         this.loaded = true;
                     });
@@ -140,6 +142,7 @@ class ProgressiveImage extends HTMLElement {
                 console.log(`${value.name} => ${value.value}`);
                 return value;
             });
+        console.log(this.dataset);
         imageBuffer.onload = onLoadFn;
         imageBuffer.src = src;
         return imageBuffer;
@@ -161,5 +164,13 @@ https://jmperezperez.com/more-progressive-image-loading/
 https://codepen.io/jmperez/pen/yYjPER
 
 https://github.com/GoogleChromeLabs/ui-element-samples/blob/gh-pages/lazy-image/static/sc-img.js
+
+https://medium.com/front-end-hacking/progressive-image-loading-and-intersectionobserver-d0359b5d90cd
+
+The gist is to load in a smaller image a-head-of a big image. Once the big image
+is loaded, then replace the smaller image. The replacing could be nicel done with
+a CSS transition (e.g. opacity change).
+- Perhaps store "real" image in a dataset property, and setting the image.src to
+preview image, replacing the preview with the real image once it has buffered up.
 
 */
