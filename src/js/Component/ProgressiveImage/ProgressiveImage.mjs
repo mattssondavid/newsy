@@ -2,16 +2,50 @@ import customElements from '../../Util/CustomElements.mjs';
 
 const template = document.createElement('template');
 template.innerHTML = `
-    <style></style>
+    <style>
+        :host {
+            box-sizing: border-box;
+            display: inline;
+            margin: 0;
+            padding: 0;
+            /*position: relative;*/
+            width: 100%;
+        }
+
+        img {
+            max-width: 100%;
+            /*position: absolute;
+            top: 0;
+            left: 0;*/
+        }
+
+        :host([preview]) > img {
+            filter: blur(5px);
+        }
+
+        :host([loaded]) > img {
+            will-change: opacity;
+            animation-name: image-shift;
+            animation-duration: 3s;
+        }
+
+        @keyframes image-shift {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
     <img>
 `;
 
 class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
         return [
-            'loaded',
             'src',
-            'thumbnailsrc'
         ];
     }
 
@@ -24,11 +58,22 @@ class ProgressiveImage extends HTMLElement {
     }
 
     connectedCallback() {
-        this._liftAttribute('thumbnailsrc');
-        this._liftAttribute('src');
         this._liftAttribute('alt');
-        this._liftAttribute('width');
         this._liftAttribute('height');
+        this._liftAttribute('width');
+        this._liftAttribute('src');
+
+        if (!this.hasAttribute('alt')) {
+            this.alt = '';
+        }
+
+        if (!this.hasAttribute('role')) {
+            this.setAttribute('role', 'img');
+        }
+
+        if (!this.hasAttribute('tabindex')) {
+            this.setAttribute('tabindex', '0');
+        }
     }
 
     disconnectedCallback() {
@@ -38,23 +83,20 @@ class ProgressiveImage extends HTMLElement {
         const hasNewValue = newValue !== null;
         const valueHasChanged = oldValue !== newValue;
         switch (attrName) {
-            case 'thumbnailsrc':
-                if (hasNewValue && valueHasChanged) {
-                    const image = this._createImage(this.thumbnailsrc, (_) => {
-                        console.log('preview image ready', image);
-                        this._img.parentNode.replaceChild(image, this._img);
-                        this._img = image;
-                    });
-                }
-                break;
-
             case 'src':
                 if (hasNewValue && valueHasChanged) {
-                    const image = this._createImage(this.src, (_) => {
-                        console.log('true image ready', image);
+                    this.src = newValue;
+                    const image = this._createImage(newValue, (_) => {
                         this._img.parentNode.replaceChild(image, this._img);
                         this._img = image;
-                        this.loaded = true;
+                        if (this.src !== this.dataSrc) {
+                            this.preview = true;
+                            this.loaded = false;
+                            this.src = this.dataSrc; // Re-trigger attributeChangedCallback
+                        } else {
+                            this.preview = false;
+                            this.loaded = true;
+                        }
                     });
                 }
                 break;
@@ -65,19 +107,29 @@ class ProgressiveImage extends HTMLElement {
     }
 
     get alt() {
-        return this._img.getAttribute('alt');
+        return this.getAttribute('alt');
     }
 
     set alt(value) {
         this._img.setAttribute('alt', value);
+        this.setAttribute('alt', value);
     }
 
-    get thumbnailsrc() {
-        return this.getAttribute('thumbnailsrc');
+    get dataSrc() {
+        return this.dataset.src;
     }
 
-    set thumbnailsrc(value) {
-        this.setAttribute('thumbnailsrc', value);
+    set dataSrc(value) {
+        this.setAttribute('data-src', value);
+    }
+
+    get height() {
+        return this.getAttribute('height');
+    }
+
+    set height(value) {
+        this._img.setAttribute('height', value);
+        this.setAttribute('height', value);
     }
 
     get loaded() {
@@ -93,21 +145,26 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
+    get preview() {
+        return this.hasAttribute('preview');
+    }
+
+    set preview(value) {
+        const isPreview = Boolean(value);
+        if (isPreview) {
+            this.setAttribute('preview', '');
+        } else {
+            this.removeAttribute('preview');
+        }
+    }
+
     get src() {
         return this.getAttribute('src');
     }
 
     set src(value) {
+        this._img.setAttribute('src', value);
         this.setAttribute('src', value);
-    }
-
-    get height() {
-        return this.getAttribute('height');
-    }
-
-    set height(value) {
-        this._img.setAttribute('height', value);
-        this.setAttribute('height', value);
     }
 
     get width() {
@@ -117,14 +174,6 @@ class ProgressiveImage extends HTMLElement {
     set width(value) {
         this._img.setAttribute('width', value);
         this.setAttribute('width', value);
-    }
-
-    _liftAttribute(attribute) {
-        if (this.hasOwnProperty(attribute)) {
-            const originalAttribute = this[attribute];
-            delete this[attribute];
-            this[attribute] = originalAttribute;
-        }
     }
 
     _createImage(src, onLoadFn) {
@@ -139,10 +188,8 @@ class ProgressiveImage extends HTMLElement {
             })
             .map((value) => {
                 imageBuffer[value.name] = value.value;
-                console.log(`${value.name} => ${value.value}`);
                 return value;
             });
-        console.log(this.dataset);
         imageBuffer.onload = onLoadFn;
         imageBuffer.src = src;
         return imageBuffer;
@@ -150,6 +197,14 @@ class ProgressiveImage extends HTMLElement {
 
     _getAttributesArray() {
         return Array.prototype.slice.call(this.attributes);
+    }
+
+    _liftAttribute(attribute) {
+        if (this.hasOwnProperty(attribute)) {
+            const originalAttribute = this[attribute];
+            delete this[attribute];
+            this[attribute] = originalAttribute;
+        }
     }
 }
 customElements.define('progressive-img', ProgressiveImage);

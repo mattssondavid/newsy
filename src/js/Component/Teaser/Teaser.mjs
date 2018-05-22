@@ -105,8 +105,7 @@ class Teaser extends HTMLElement {
                 image.alt = this._post.featured_media_data.alt_text;
                 image.width = this._post.featured_media_data.media_details.sizes.medium.width;
                 image.height = this._post.featured_media_data.media_details.sizes.medium.height;
-                image.src = this._post.featured_media_data.media_details.sizes.medium.source_url;
-                image.thumbnailsrc = this._post.featured_media_data.media_details.sizes.thumbnail.source_url;
+                image.src = this._post.featured_media_data.media_details.sizes.thumbnail.source_url;
                 image.dataset.src = this._post.featured_media_data.media_details.sizes.medium.source_url;
                 const imageLink = this.shadowRoot.querySelector('a');
                 imageLink.href = this._post.link;
