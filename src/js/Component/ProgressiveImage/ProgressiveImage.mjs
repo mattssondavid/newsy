@@ -39,7 +39,7 @@ template.innerHTML = `
             }
         }
     </style>
-    <img>
+    <img />
 `;
 
 class ProgressiveImage extends HTMLElement {
@@ -87,7 +87,16 @@ class ProgressiveImage extends HTMLElement {
                 if (hasNewValue && valueHasChanged) {
                     this.src = newValue;
                     const image = this._createImage(newValue, (_) => {
-                        this._img.parentNode.replaceChild(image, this._img);
+                        if (this._img.parentNode === null) {
+                            // This is a fix for Firefox, which can enter a state
+                            // where parentNode (the shadowRoot) is NULL, which
+                            // is caused by Firefox not creating empty elements
+                            // in a shadowRoot, so the initial <img /> does not
+                            // exist
+                            this.shadowRoot.appendChild(image);
+                        } else {
+                            this._img.parentNode.replaceChild(image, this._img);
+                        }
                         this._img = image;
                         if (this.src !== this.dataSrc) {
                             this.preview = true;
