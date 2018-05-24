@@ -1,19 +1,31 @@
 # Easy access the WordPress docker image
 `docker exec -it $(docker ps -a | grep wordpress | awk '{print $1}') bash`
 
-# Enable the dev site at URL `this.localhost`
-Edit your host file with:
+# Installation
+## SSL
+Before you create the Docker images you must create the files `rootCA.key` and `rootCA.pem`.
+These files can be created by running the file `etc/ssl/create_root_cert.sh` on a system running openssl.
+If you do not run the above Shell Script in the script's location folder, then move the rootCA-files into `etc/ssl/`. They are required to build the Docker images for enabling HTTPS.
+
+## Docker
+1. Build the required Docker images by running `docker-compose build`.
+2. Start the Docker containers by running `docker-compose up`.
+
+## Enable the dev site at URL `this.localhost`
+Edit your system's host file with:
 ```
 # this.localhost -- Docker Apache HTTP server with SSL support
 127.0.0.1	this.localhost
 ```
 
-## Create new SSL certificates
-To create a new SSL certificate you can use the script located in `etc/ssl/create_new_cert.sh`
-which will be copied over to `/root/create_new_cert.sh`. Run the script either
-in the Docker container or a Linux system. Replace the output SSL .key and .crt
-in the `etc/ssl` folder with the ones you just created.
-
-#### Notes of the URL why it's not `.dev`
+### Notes of the URL why it's not `.dev`
 The use of .dev in the URL will cause Chrome to behave weird as .dev is now
 owned by Google and they have started using it. For more information see [this](https://iyware.com/dont-use-dev-for-development/)
+
+## Activating SSL certificate in browsers to enable HTTPS on `this.localhost`
+Add the file `rootCA.pem` in folder `etc/ssl` to your system's certificate manager in the section for `Trusted Root Certification Authorities`. This will enable the certificate created by the Docker build, signed by the `rootCA` files, used by Apache for SSL, to be trusted by your local system and thus enabling HTTPS support on the website.
+
+# Theme installation
+The WordPress theme is dependent on NPM. Install NPM dependencies by running `npm install` in the root git repository folder.
+
+To "build" the theme run `npm build`.
