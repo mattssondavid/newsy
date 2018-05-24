@@ -20,11 +20,11 @@ COPY etc/apache/default-ssl.conf /etc/apache2/sites-available/
 
 # Add SSL support
 RUN apt-get update && \
-	apt-get install -y  --no-install-recommends ssl-cert && \
-	a2enmod rewrite && \
-	a2enmod headers && \
-	a2enmod ssl && \
-	a2ensite default-ssl
+    apt-get install -y  --no-install-recommends ssl-cert && \
+    a2enmod rewrite && \
+    a2enmod headers && \
+    a2enmod ssl && \
+    a2ensite default-ssl
 
 RUN /root/create_domain_cert.sh this.localhost
 

@@ -5,18 +5,18 @@ cd /root
 
 if [ -z "$1" ]
 then
-  echo "Please supply a subdomain to create a certificate for";
-  echo "e.g. www.mysite.com"
-  exit;
+    echo "Please supply a subdomain to create a certificate for";
+    echo "e.g. www.mysite.com"
+    exit;
 fi
 
 if [ ! -f rootCA.pem ]; then
-  echo 'Please run "create_root_cert_and_key.sh" first, and try again!'
-  exit;
+    echo 'Please run "create_root_cert_and_key.sh" first, and try again!'
+    exit;
 fi
 if [ ! -f v3.ext ]; then
-  echo 'Please download the "v3.ext" file and try again!'
-  exit;
+    echo 'Please download the "v3.ext" file and try again!'
+    exit;
 fi
 
 DOMAIN=$1
