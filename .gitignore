@@ -1,3 +1,6 @@
 node_modules
 dist
 wp_uploads
+
+etc/ssl/rootCA.key
+etc/ssl/rootCA.pem
