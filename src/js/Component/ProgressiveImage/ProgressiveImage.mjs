@@ -4,36 +4,74 @@ const template = document.createElement('template');
 template.innerHTML = `
     <style>
         :host {
-            box-sizing: border-box;
-            display: inline;
+            /*
+             * :host is not supported outside Chrome, use the tag name instead.
+             * Tag name is not supported in chrome, use :host for chrome.
+             * Cannot use wc-tag, :host {} nor :host, wc-tag {} CSS style rules either.
+             */
+            box-sizing: inherit;
+            display: inline-block;
             margin: 0;
             padding: 0;
-            /*position: relative;*/
+            position: relative;
             width: 100%;
         }
 
-        img {
+        :host > img {
             max-width: 100%;
-            /*position: absolute;
+            position: absolute;
             top: 0;
-            left: 0;*/
+            left: 0;
         }
 
         :host([preview]) > img {
+            -webkit-filter: blur(5px);
             filter: blur(5px);
         }
 
         :host([loaded]) > img {
             will-change: opacity;
+            -webkit-animation-name: image-shift;
+            -moz-animation-name: image-shift;
+            -o-animation-name: image-shift;
             animation-name: image-shift;
+            -webkit-animation-duration: 3s;
+            -moz-animation-duration: 3s;
+            -o-animation-duration: 3s;
             animation-duration: 3s;
+        }
+
+        @-webkit-keyframes image-shift {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @-moz-keyframes image-shift {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @-o-keyframes image-shift {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes image-shift {
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
@@ -46,6 +84,8 @@ class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
         return [
             'src',
+            'height',
+            'width',
         ];
     }
 
@@ -85,7 +125,6 @@ class ProgressiveImage extends HTMLElement {
         switch (attrName) {
             case 'src':
                 if (hasNewValue && valueHasChanged) {
-                    this.src = newValue;
                     const image = this._createImage(newValue, (_) => {
                         if (this._img.parentNode === null) {
                             // This is a fix for Firefox, which can enter a state
@@ -107,6 +146,20 @@ class ProgressiveImage extends HTMLElement {
                             this.loaded = true;
                         }
                     });
+                }
+                break;
+
+            case 'height':
+                if (hasNewValue && valueHasChanged) {
+                    this.style.height = `${newValue}px`;
+                    this._img.setAttribute('height', newValue);
+                }
+                break;
+
+            case 'width':
+                if (hasNewValue && valueHasChanged) {
+                    this.style.width = `${newValue}px`;
+                    this._img.setAttribute('width', newValue);
                 }
                 break;
 
@@ -137,7 +190,6 @@ class ProgressiveImage extends HTMLElement {
     }
 
     set height(value) {
-        this._img.setAttribute('height', value);
         this.setAttribute('height', value);
     }
 
@@ -181,7 +233,6 @@ class ProgressiveImage extends HTMLElement {
     }
 
     set width(value) {
-        this._img.setAttribute('width', value);
         this.setAttribute('width', value);
     }
 
@@ -189,7 +240,7 @@ class ProgressiveImage extends HTMLElement {
         const imageBuffer = new Image();
         const attrs = this._getAttributesArray()
             .filter((value) => {
-                return value.name !== 'src';
+                return value.name !== 'src' && value.name !== 'style';
             })
             .map((value) => {
                 this[value.name] = value.value
@@ -237,4 +288,16 @@ a CSS transition (e.g. opacity change).
 - Perhaps store "real" image in a dataset property, and setting the image.src to
 preview image, replacing the preview with the real image once it has buffered up.
 
+*/
+
+/*
+To fix Firefox and Edge with bleeding CSS, perhaps should check if the browser
+supports shadowDOM CSS, if it doesn't then perhaps loop through all CSS rules in
+the template.style and apply it with `"this.style" = ...`
+
+styles:
+console.log(this.shadowRoot.querySelector('style'));
+console.log('host', this.shadowRoot.host);
+console.log('stylesheets', this.shadowRoot.styleSheets);
+console.log('host style', this.shadowRoot.host.style);
 */
