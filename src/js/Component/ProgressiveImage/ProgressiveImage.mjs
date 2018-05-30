@@ -173,7 +173,6 @@ class ProgressiveImage extends HTMLElement {
     }
 
     set alt(value) {
-        this._img.setAttribute('alt', value);
         this.setAttribute('alt', value);
     }
 
@@ -224,7 +223,6 @@ class ProgressiveImage extends HTMLElement {
     }
 
     set src(value) {
-        this._img.setAttribute('src', value);
         this.setAttribute('src', value);
     }
 
@@ -241,10 +239,6 @@ class ProgressiveImage extends HTMLElement {
         const attrs = this._getAttributesArray()
             .filter((value) => {
                 return value.name !== 'src' && value.name !== 'style';
-            })
-            .map((value) => {
-                this[value.name] = value.value
-                return value;
             })
             .map((value) => {
                 imageBuffer[value.name] = value.value;
