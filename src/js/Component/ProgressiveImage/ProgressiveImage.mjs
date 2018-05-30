@@ -1,14 +1,10 @@
 import customElements from '../../Util/CustomElements.mjs';
+import {ShadyCSSStampElement} from '../../Util/ShadyCSSHelper.mjs';
 
 const template = document.createElement('template');
 template.innerHTML = `
     <style>
         :host {
-            /*
-             * :host is not supported outside Chrome, use the tag name instead.
-             * Tag name is not supported in chrome, use :host for chrome.
-             * Cannot use wc-tag, :host {} nor :host, wc-tag {} CSS style rules either.
-             */
             -webkit-box-sizing: inherit;
             -moz-box-sizing: inherit;
             box-sizing: inherit;
@@ -93,6 +89,7 @@ class ProgressiveImage extends HTMLElement {
 
     constructor() {
         super();
+        ShadyCSSStampElement(template, 'progressive-img', this);
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
