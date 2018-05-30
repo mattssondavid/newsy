@@ -9,6 +9,8 @@ template.innerHTML = `
              * Tag name is not supported in chrome, use :host for chrome.
              * Cannot use wc-tag, :host {} nor :host, wc-tag {} CSS style rules either.
              */
+            -webkit-box-sizing: inherit;
+            -moz-box-sizing: inherit;
             box-sizing: inherit;
             display: inline-block;
             margin: 0;
