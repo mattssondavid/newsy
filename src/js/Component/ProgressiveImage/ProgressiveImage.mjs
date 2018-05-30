@@ -15,7 +15,7 @@ template.innerHTML = `
             width: 100%;
         }
 
-        :host > img {
+        img {
             max-width: 100%;
             position: absolute;
             top: 0;
