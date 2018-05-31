@@ -78,12 +78,24 @@ template.innerHTML = `
     <img />
 `;
 
+const intersectionObserver = new IntersectionObserver(
+    (entries, observer) => {
+        for (const entry of entries) {
+            if (entry.isIntersecting) {
+                entry.target.setAttribute('intersected', '');
+            }
+        }
+    },
+    {}
+);
+
 class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
         return [
             'src',
             'height',
             'width',
+            'intersected',
         ];
     }
 
@@ -101,6 +113,7 @@ class ProgressiveImage extends HTMLElement {
         this._liftAttribute('height');
         this._liftAttribute('width');
         this._liftAttribute('src');
+        this._liftAttribute('intersected');
 
         if (!this.hasAttribute('alt')) {
             this.alt = '';
@@ -113,9 +126,12 @@ class ProgressiveImage extends HTMLElement {
         if (!this.hasAttribute('tabindex')) {
             this.setAttribute('tabindex', '0');
         }
+
+        intersectionObserver.observe(this);
     }
 
     disconnectedCallback() {
+        intersectionObserver.unobserve(this);
     }
 
     attributeChangedCallback(attrName, oldValue, newValue) {
@@ -139,7 +155,9 @@ class ProgressiveImage extends HTMLElement {
                         if (this.src !== this.dataSrc) {
                             this.preview = true;
                             this.loaded = false;
-                            this.src = this.dataSrc; // Re-trigger attributeChangedCallback
+                            if (this.intersected) {
+                                this.src = this.dataSrc; // Re-trigger attributeChangedCallback
+                            }
                         } else {
                             this.preview = false;
                             this.loaded = true;
@@ -161,6 +179,19 @@ class ProgressiveImage extends HTMLElement {
                     this._img.setAttribute('width', newValue);
                 }
                 break;
+
+            case 'intersected':
+                if (hasNewValue && valueHasChanged) {
+                    if (!this.intersected
+                        || this.loaded
+                        || !this.preview
+                        || !this.src
+                        || !this.dataSrc
+                    ) {
+                        return;
+                    }
+                    this.src = this.dataSrc;
+                }
 
             default:
                 break;
@@ -189,6 +220,19 @@ class ProgressiveImage extends HTMLElement {
 
     set height(value) {
         this.setAttribute('height', value);
+    }
+
+    get intersected() {
+        return this.hasAttribute('intersected');
+    }
+
+    set intersected(value) {
+        const isIntersected = Boolean(value);
+        if (isIntersected) {
+            this.setAttribute('intersected', '');
+        } else {
+            this.removeAttribute('intersected');
+        }
     }
 
     get loaded() {
