@@ -1,5 +1,4 @@
 import customElements from '../../Util/CustomElements.mjs';
-import {ShadyCSSStampElement} from '../../Util/ShadyCSSHelper.mjs';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -105,7 +104,10 @@ class ProgressiveImage extends HTMLElement {
 
     constructor() {
         super();
-        ShadyCSSStampElement(template, 'progressive-img', this);
+        if (window.ShadyCSS) {
+            window.ShadyCSS.prepareTemplate(template, this.localName);
+            window.ShadyCSS.styleElement(this);
+        }
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
