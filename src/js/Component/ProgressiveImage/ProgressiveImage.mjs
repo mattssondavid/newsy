@@ -81,12 +81,16 @@ template.innerHTML = `
 const intersectionObserver = new IntersectionObserver(
     (entries, observer) => {
         for (const entry of entries) {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting || entry.intersectionRatio > 0) {
                 entry.target.setAttribute('intersected', '');
             }
         }
     },
-    {}
+    {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0
+    }
 );
 
 class ProgressiveImage extends HTMLElement {
@@ -140,6 +144,9 @@ class ProgressiveImage extends HTMLElement {
         switch (attrName) {
             case 'src':
                 if (hasNewValue && valueHasChanged) {
+                    if (this.loaded) {
+                        return;
+                    }
                     const image = this._createImage(newValue, (_) => {
                         if (this._img.parentNode === null) {
                             // This is a fix for Firefox, which can enter a state
@@ -156,6 +163,9 @@ class ProgressiveImage extends HTMLElement {
                             this.preview = true;
                             this.loaded = false;
                             if (this.intersected) {
+                                // This takes effect if the user reload the page
+                                // where an image should immediately render as it
+                                // initialised in the viewport
                                 this.src = this.dataSrc; // Re-trigger attributeChangedCallback
                             }
                         } else {
@@ -181,17 +191,52 @@ class ProgressiveImage extends HTMLElement {
                 break;
 
             case 'intersected':
-                if (hasNewValue && valueHasChanged) {
-                    if (!this.intersected
-                        || this.loaded
-                        || !this.preview
-                        || !this.src
-                        || !this.dataSrc
-                    ) {
-                        return;
-                    }
-                    this.src = this.dataSrc;
+                if (!this.intersected) {
+                    return;
                 }
+                if (this.loaded) {
+                    intersectionObserver.unobserve(this);
+                    return;
+                }
+                if (this.preview && (!this.src || !this.dataSrc)) {
+                    return;
+                } else if (this.preview && (!!this.src || !!this.dataSrc)) {
+                    this.src = this.dataSrc;
+                    return;
+                }
+                if (hasNewValue
+                    && valueHasChanged
+                    && !this.loaded
+                    && !this.preview
+                    && !this.src
+                    && !this.dataSrc
+                ) {
+                    // Component is not yet fully loaded
+                    return;
+                } else if (
+                    hasNewValue
+                    && !valueHasChanged
+                    && !this.loaded
+                    && !this.preview
+                    && !this.src
+                    && !this.dataSrc
+                ) {
+                    // Component will not load at all due to missing src/data-src
+                    intersectionObserver.unobserve(this);
+                    return;
+                } else if (
+                    hasNewValue
+                    && !valueHasChanged
+                    && !this.loaded
+                    && !this.preview
+                    && !!this.src // true if non-empty string
+                    && !!this.dataSrc
+                ) {
+                    // The component is not yet fully loaded. This occurs only
+                    // on Chrome.
+                    return;
+                }
+                break;
 
             default:
                 break;
@@ -207,7 +252,7 @@ class ProgressiveImage extends HTMLElement {
     }
 
     get dataSrc() {
-        return this.dataset.src;
+        return this.dataset.src || "";
     }
 
     set dataSrc(value) {
@@ -262,7 +307,7 @@ class ProgressiveImage extends HTMLElement {
     }
 
     get src() {
-        return this.getAttribute('src');
+        return this.getAttribute('src') || "";
     }
 
     set src(value) {
