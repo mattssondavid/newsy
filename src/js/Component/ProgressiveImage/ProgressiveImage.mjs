@@ -19,11 +19,13 @@ template.innerHTML = `
             position: absolute;
             top: 0;
             left: 0;
+            opacity: 0;
         }
 
         :host([preview]) > img {
             -webkit-filter: blur(5px);
             filter: blur(5px);
+            opacity: 1;
         }
 
         :host([loaded]) > img {
@@ -36,6 +38,7 @@ template.innerHTML = `
             -moz-animation-duration: 3s;
             -o-animation-duration: 3s;
             animation-duration: 3s;
+            opacity: 1;
         }
 
         @-webkit-keyframes image-shift {
@@ -80,7 +83,9 @@ template.innerHTML = `
 const intersectionObserver = new IntersectionObserver(
     (entries, observer) => {
         for (const entry of entries) {
-            if (entry.isIntersecting || entry.intersectionRatio > 0) {
+            if ((entry.isIntersecting || entry.intersectionRatio > 0)
+                && entry.target.offsetHeight > 0
+            ) {
                 entry.target.setAttribute('intersected', '');
             }
         }
