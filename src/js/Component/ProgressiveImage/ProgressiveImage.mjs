@@ -97,9 +97,21 @@ const intersectionObserver = new IntersectionObserver(
     }
 );
 
+const loadImage = src => {
+    return new Promise((resolve, reject) => {
+        const imageBuffer = new Image();
+        imageBuffer.onload = resolve;
+        imageBuffer.onerror = reject;
+        imageBuffer.src = src;
+    });
+};
+
+const getAttributesArray = (element) => Array.prototype.slice.call(element.attributes);
+
 class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
         return [
+            'alt',
             'src',
             'height',
             'width',
@@ -149,36 +161,33 @@ class ProgressiveImage extends HTMLElement {
         const hasNewValue = newValue !== null;
         const valueHasChanged = oldValue !== newValue;
         switch (attrName) {
+            case 'alt':
+                if (hasNewValue && valueHasChanged) {
+                    this._img.setAttribute('alt', newValue);
+                }
+                break;
+
             case 'src':
                 if (hasNewValue && valueHasChanged) {
                     if (this.loaded) {
                         return;
                     }
-                    const image = this._createImage(newValue, (_) => {
-                        if (this._img.parentNode === null) {
-                            // This is a fix for Firefox, which can enter a state
-                            // where parentNode (the shadowRoot) is NULL, which
-                            // is caused by Firefox not creating empty elements
-                            // in a shadowRoot, so the initial <img /> does not
-                            // exist
-                            this.shadowRoot.appendChild(image);
-                        } else {
-                            this._img.parentNode.replaceChild(image, this._img);
-                        }
-                        this._img = image;
+                    loadImage(this.src).then(_ => {
+                        this._img.src = this.src;
                         if (this.src !== this.dataSrc) {
                             this.preview = true;
                             this.loaded = false;
-                            if (this.intersected) {
-                                // This takes effect if the user reload the page
-                                // where an image should immediately render as it
-                                // initialised in the viewport
-                                this.src = this.dataSrc; // Re-trigger attributeChangedCallback
-                            }
                         } else {
                             this.preview = false;
                             this.loaded = true;
                         }
+                        // getAttributesArray(this)
+                        //     .filter((value) => value.name !== 'src' && value.name !== 'style')
+                        //     .map((value) => {
+                        //         this._img[value.name] = value.value;
+                        //         console.log(value.name);
+                        //         return value;
+                        //     });
                     });
                 }
                 break;
@@ -327,25 +336,6 @@ class ProgressiveImage extends HTMLElement {
 
     set width(value) {
         this.setAttribute('width', value);
-    }
-
-    _createImage(src, onLoadFn) {
-        const imageBuffer = new Image();
-        const attrs = this._getAttributesArray()
-            .filter((value) => {
-                return value.name !== 'src' && value.name !== 'style';
-            })
-            .map((value) => {
-                imageBuffer[value.name] = value.value;
-                return value;
-            });
-        imageBuffer.onload = onLoadFn;
-        imageBuffer.src = src;
-        return imageBuffer;
-    }
-
-    _getAttributesArray() {
-        return Array.prototype.slice.call(this.attributes);
     }
 
     _liftAttribute(attribute) {
