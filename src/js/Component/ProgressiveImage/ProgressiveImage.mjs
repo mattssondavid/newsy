@@ -1,4 +1,3 @@
-import customElements from '../../Util/CustomElements.mjs';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -81,7 +80,7 @@ template.innerHTML = `
 `;
 
 const intersectionObserver = new IntersectionObserver(
-    (entries, observer) => {
+    (entries, _) => {
         for (const entry of entries) {
             if ((entry.isIntersecting || entry.intersectionRatio > 0)
                 && entry.target.offsetHeight > 0
@@ -105,8 +104,6 @@ const loadImage = src => {
         imageBuffer.src = src;
     });
 };
-
-const getAttributesArray = (element) => Array.prototype.slice.call(element.attributes);
 
 class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
@@ -149,8 +146,6 @@ class ProgressiveImage extends HTMLElement {
         if (!this.hasAttribute('tabindex')) {
             this.setAttribute('tabindex', '0');
         }
-
-        intersectionObserver.observe(this);
     }
 
     disconnectedCallback() {
@@ -172,7 +167,8 @@ class ProgressiveImage extends HTMLElement {
                     if (this.loaded) {
                         return;
                     }
-                    loadImage(this.src).then(_ => {
+                    loadImage(this.src)
+                    .then(_ => {
                         this._img.src = this.src;
                         if (this.src !== this.dataSrc) {
                             this.preview = true;
@@ -181,13 +177,14 @@ class ProgressiveImage extends HTMLElement {
                             this.preview = false;
                             this.loaded = true;
                         }
-                        // getAttributesArray(this)
-                        //     .filter((value) => value.name !== 'src' && value.name !== 'style')
-                        //     .map((value) => {
-                        //         this._img[value.name] = value.value;
-                        //         console.log(value.name);
-                        //         return value;
-                        //     });
+                    })
+                    .then(_ => {
+                        if (!this.intersected
+                            && this.preview
+                            && !this.loaded
+                        ) {
+                            intersectionObserver.observe(this);
+                        }
                     });
                 }
                 break;
@@ -210,46 +207,12 @@ class ProgressiveImage extends HTMLElement {
                 if (!this.intersected) {
                     return;
                 }
-                if (this.loaded) {
+                if (this.loaded || (!this.src || !this.dataSrc)) {
                     intersectionObserver.unobserve(this);
                     return;
                 }
-                if (this.preview && (!this.src || !this.dataSrc)) {
-                    return;
-                } else if (this.preview && (!!this.src || !!this.dataSrc)) {
+                if (this.preview && (!!this.src && !!this.dataSrc)) {
                     this.src = this.dataSrc;
-                    return;
-                }
-                if (hasNewValue
-                    && valueHasChanged
-                    && !this.loaded
-                    && !this.preview
-                    && !this.src
-                    && !this.dataSrc
-                ) {
-                    // Component is not yet fully loaded
-                    return;
-                } else if (
-                    hasNewValue
-                    && !valueHasChanged
-                    && !this.loaded
-                    && !this.preview
-                    && !this.src
-                    && !this.dataSrc
-                ) {
-                    // Component will not load at all due to missing src/data-src
-                    intersectionObserver.unobserve(this);
-                    return;
-                } else if (
-                    hasNewValue
-                    && !valueHasChanged
-                    && !this.loaded
-                    && !this.preview
-                    && !!this.src // true if non-empty string
-                    && !!this.dataSrc
-                ) {
-                    // The component is not yet fully loaded. This occurs only
-                    // on Chrome.
                     return;
                 }
                 break;
@@ -349,34 +312,3 @@ class ProgressiveImage extends HTMLElement {
 customElements.define('progressive-img', ProgressiveImage);
 
 export default ProgressiveImage;
-
-/*
-
-https://www.sitepoint.com/how-to-build-your-own-progressive-image-loader/
-
-https://jmperezperez.com/more-progressive-image-loading/
-https://codepen.io/jmperez/pen/yYjPER
-
-https://github.com/GoogleChromeLabs/ui-element-samples/blob/gh-pages/lazy-image/static/sc-img.js
-
-https://medium.com/front-end-hacking/progressive-image-loading-and-intersectionobserver-d0359b5d90cd
-
-The gist is to load in a smaller image a-head-of a big image. Once the big image
-is loaded, then replace the smaller image. The replacing could be nicel done with
-a CSS transition (e.g. opacity change).
-- Perhaps store "real" image in a dataset property, and setting the image.src to
-preview image, replacing the preview with the real image once it has buffered up.
-
-*/
-
-/*
-To fix Firefox and Edge with bleeding CSS, perhaps should check if the browser
-supports shadowDOM CSS, if it doesn't then perhaps loop through all CSS rules in
-the template.style and apply it with `"this.style" = ...`
-
-styles:
-console.log(this.shadowRoot.querySelector('style'));
-console.log('host', this.shadowRoot.host);
-console.log('stylesheets', this.shadowRoot.styleSheets);
-console.log('host style', this.shadowRoot.host.style);
-*/
