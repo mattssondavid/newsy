@@ -22,8 +22,12 @@
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "chai": "^4.1.2",
     "copy-webpack-plugin": "^4.5.1",
+    "redux": "^4.0.1",
     "tap": "^11.1.4",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
+  },
+  "dependencies": {
+    "jslint": "^0.12.0"
   }
 }

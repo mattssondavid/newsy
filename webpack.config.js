@@ -12,6 +12,10 @@ module.exports = {
         new CopyWebpackPlugin([{
             from: path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs'),
             to: path.resolve(__dirname, 'dist/node_modules/webcomponentsjs/')
+        }]),
+        new CopyWebpackPlugin([{
+            from: path.resolve(__dirname, 'node_modules/redux/dist/redux.min.js'),
+            to: path.resolve(__dirname, 'dist/node_modules/redux/')
         }])
     ]
 }
