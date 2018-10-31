@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from '../Redux/Redux.js';
 
 import { postReducer } from '../Post/Reducer/Post.mjs';
 

@@ -16,7 +16,6 @@
     ?>
     </style>
     <script type="text/javascript" src="<?= get_template_directory_uri(); ?>/node_modules/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="text/javascript" src="<?= get_template_directory_uri(); ?>/node_modules/redux/redux.min.js"></script>
     <script type="module" src="<?= get_template_directory_uri(); ?>/index.mjs"></script>
     <script type="text/javascript" src="<?= get_template_directory_uri(); ?>/legacy.js" nomodule defer></script>
     <?php wp_head(); ?>

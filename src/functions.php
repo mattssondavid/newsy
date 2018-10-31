@@ -105,3 +105,48 @@ add_action(
     10,
     0
 );
+
+/**
+ * Curry function
+ *
+ * @param callable $callable
+ *
+ * @return closure
+ */
+function curry(callable $callable)
+{
+    $args = func_get_args();
+    $outerArgs = array_slice($args, 1, count($args));
+    return function () use ($callable, $outerArgs) {
+        $innerArgs = func_get_args();
+        $leftCurry = array_merge($outerArgs, $innerArgs); // f(a, b) does f(a) => f(b)
+        $rightCurry = array_merge($innerArgs, $outerArgs); // f(a, b) does f(b) => f(a)
+        return call_user_func_array(
+            $callable,
+            $leftCurry
+        );
+    };
+}
+
+/**
+ * Compose function
+ *
+ * @param callable $f
+ * @param callable $g
+ */
+function compose($f, $g)
+{
+    return function ($value) use ($f, $g) {
+        return $f($g($value));
+    };
+}
+
+/**
+ * Pipe function
+ */
+function pipe($f, $g)
+{
+    return function ($value) use ($f, $g) {
+        return $g($f($value));
+    };
+}

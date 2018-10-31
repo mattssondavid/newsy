@@ -1,4 +1,4 @@
-import {applyMiddleware, createStore, compose} from 'redux';
+import {applyMiddleware, createStore, compose} from '../Redux/Redux.js';
 
 import rootReducer from './Reducer.js';
 import rootMiddlewares from './Middleware.mjs';
