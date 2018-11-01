@@ -6,7 +6,5 @@ import rootMiddlewares from './Middleware.mjs';
 export const configureStore = preloadedState => createStore(
     rootReducer,
     preloadedState,
-    compose(
-        applyMiddleware(rootMiddlewares)
-    )
+    compose(applyMiddleware(...rootMiddlewares))
 );

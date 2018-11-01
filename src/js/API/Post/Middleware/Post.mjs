@@ -16,19 +16,20 @@ export const getPost = store => next => action => {
             )
         );
     }
-    next(action);
+    return next(action);
 };
 
-export const postReceived = store => next => action => {
-    next(action);
-    if (action.type === RECEIVE_POST) {
-        store.dispatch(
-            receivePost(action.payload)
-        );
-    }
-};
+// export const postReceived = store => next => action => {
+//     const result = next(action);
+//     if (action.type === RECEIVE_POST) {
+//         store.dispatch(
+//             receivePost(action.payload)
+//         );
+//     }
+//     return result;
+// };
 
 export const postMiddleware = [
     getPost,
-    postReceived
+    // postReceived
 ];
