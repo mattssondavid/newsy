@@ -1,6 +1,22 @@
 const path = require('path');
-const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const fs = require('fs-extra');
+
+/* Prepare */
+// Load Redux
+fs.copySync(
+    path.resolve(__dirname, 'node_modules/redux/es/redux.mjs'),
+    path.resolve(__dirname, 'src/node_modules/redux/es/redux.mjs') // src so builder can find the file when following import path from index.mjs
+);
+
+// Load Web Components polyfill JS
+fs.copySync(
+    path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'),
+    path.resolve(__dirname, 'dist/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js')
+);
+fs.copySync(
+    path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs/bundles/'),
+    path.resolve(__dirname, 'dist/node_modules/@webcomponents/webcomponentsjs/bundles/')
+);
 
 module.exports = {
     entry: path.resolve(__dirname, 'src/index.mjs'),
@@ -8,10 +24,4 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'legacy.js'
     },
-    plugins: [
-        new CopyWebpackPlugin([{
-            from: path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs'),
-            to: path.resolve(__dirname, 'dist/node_modules/webcomponentsjs/')
-        }]),
-    ]
 }

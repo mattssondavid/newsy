@@ -7,4 +7,3 @@ import { configureStore } from './js/API/Store/Store.js';
 import { requestPost } from './js/API/Post/Action/Post.mjs';
 const store = configureStore({});
 store.dispatch(requestPost(1));
-console.log(store.getState());

@@ -19,6 +19,14 @@ export const api = store => next => action => {
             }
             throw new TypeError('Wrong type');
         })
+        .then(response => {
+            if (response.status >= 400) {
+                const error = new Error(response.statusText);
+                error.name = response.status;
+                throw error;
+            }
+            return response;
+        })
         .then(response => response.json())
         .then(json => store.dispatch({type: onSuccess, payload: json}))
         .catch(error => store.dispatch({type: onError, payload: error}));
