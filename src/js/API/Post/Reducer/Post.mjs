@@ -5,33 +5,32 @@ import {
 } from '../Action/Post.mjs';
 
 const initPostState = {};
-
 export function postReducer(state = initPostState, action) {
     switch (action.type) {
         case RECEIVE_POST:
             return {
                 ...state,
                 ...action.payload,
-                isFetching: false,
+                isFetching: false
             };
 
         case REQUEST_POST:
             return {
                 ...state,
                 ...action.payload,
-                isFetching: true,
+                isFetching: true
             };
 
         case REQUEST_POST_ERROR:
             return {
                 ...state,
-                isFetching: false,
                 error: {
-                    status: action.payload.name,
-                    message: action.payload.message
-                }
-            }
+                    message: action.payload.message,
+                    status: action.payload.name
+                },
+                isFetching: false
+            };
 
         default: return state;
     }
-};
+}

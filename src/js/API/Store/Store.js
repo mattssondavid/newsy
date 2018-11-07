@@ -8,8 +8,8 @@ import {
 import rootReducers from './Reducer.js';
 import rootMiddlewares from './Middleware.mjs';
 
+// eslint-disable-next-line no-underscore-dangle
 const devCompose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
 export const configureStore = preloadedState => createStore(
     combineReducers(rootReducers),
     preloadedState,

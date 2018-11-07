@@ -1,7 +1,6 @@
 import { postReducer as post } from '../Post/Reducer/Post.mjs';
 
 const rootReducers = [
-    post,
+    post
 ];
-
 export default rootReducers;

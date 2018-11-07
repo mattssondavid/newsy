@@ -6,30 +6,42 @@ export const api = store => next => action => {
         fetch(
             url,
             {
-                method,
                 headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                }
+                    "Content-Type": "application/json; charset=utf-8"
+                },
+                method
             }
         )
-        .then(response => {
-            const contentType = response.headers.get('content-type');
-            if ((contentType + "").includes('application/json')) {
+            .then(response => {
+                const contentType = response.headers.get('content-type');
+                if (String(contentType).includes('application/json')) {
+                    return response;
+                }
+                throw new TypeError('Wrong type');
+            })
+            .then(response => {
+                if (response.status >= 400) {
+                    const error = new Error(response.statusText);
+                    error.name = response.status;
+                    throw error;
+                }
+
                 return response;
-            }
-            throw new TypeError('Wrong type');
-        })
-        .then(response => {
-            if (response.status >= 400) {
-                const error = new Error(response.statusText);
-                error.name = response.status;
-                throw error;
-            }
-            return response;
-        })
-        .then(response => response.json())
-        .then(json => store.dispatch({type: onSuccess, payload: json}))
-        .catch(error => store.dispatch({type: onError, payload: error}));
+            })
+            .then(response => response.json())
+            .then(json => store.dispatch(
+                {
+                    payload: json,
+                    type: onSuccess
+                }
+            ))
+            .catch(error => store.dispatch(
+                {
+                    payload: error,
+                    type: onError
+                }
+            ));
     }
+
     return next(action);
 };

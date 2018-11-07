@@ -7,5 +7,4 @@ const middlewares = [
     api,
     logToConsole
 ];
-
 export default middlewares;
