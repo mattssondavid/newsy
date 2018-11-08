@@ -5,6 +5,15 @@ import {
 } from '../Action/Post.mjs';
 
 const initPostState = {};
+
+/**
+ * Reduce post action
+ *
+ * @param {Object} state The current state tree
+ * @param {Object} action The action to reduce
+ *
+ * @returns {Object} The new state
+ */
 export function postReducer(state = initPostState, action) {
     switch (action.type) {
         case RECEIVE_POST:

@@ -1,12 +1,12 @@
 export const FETCH_REQUEST = '[API] Fetch Request';
 
 /**
+ * @param {String} method Fetch method
+ * @param {String} url Fetch URL
+ * @param {String} body Fetch payload
+ * @param {String} onSuccess On successful Action type
+ * @param {String} onError On failure Action type
  *
- * @param {string} method Fetch method
- * @param {string} url Fetch URL
- * @param {string} body Fetch payload
- * @param {string} onSuccess On successful Action type
- * @param {string} onError On failure Action type
  * @returns {undefined}
  */
 export const fetchRequest = (method, url, body, onSuccess, onError) => ({

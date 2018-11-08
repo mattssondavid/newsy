@@ -1,5 +1,10 @@
 import { FETCH_REQUEST } from '../Action/Fetch.mjs';
 
+/**
+ * @param {Redux} store A Redux store
+ *
+ * @returns {Function} A `next` function
+ */
 export const api = store => next => action => {
     if (action.type === FETCH_REQUEST) {
         const { method, url, onSuccess, onError } = action.meta;

@@ -34,7 +34,7 @@ module.exports = {
         "consistent-this": "error",
         "curly": "error",
         "default-case": "error",
-        "dot-location": "error",
+        "dot-location": ["error", "property"],
         "dot-notation": "error",
         "eol-last": "error",
         "eqeqeq": "error",
@@ -51,7 +51,7 @@ module.exports = {
         "id-length": "error",
         "id-match": "error",
         "implicit-arrow-linebreak": "error",
-        "indent": [2, 4, {"SwitchCase": 1}],
+        "indent": [2, 4, {"SwitchCase": 1, "MemberExpression": 1}],
         // "indent-legacy": ["error", 2],
         "init-declarations": "error",
         "jsx-quotes": "error",
@@ -75,7 +75,7 @@ module.exports = {
         "max-depth": "error",
         "max-len": "off",
         "max-lines": "error",
-        "max-lines-per-function": "error",
+        // "max-lines-per-function": "error",
         "max-nested-callbacks": "error",
         "max-params": "error",
         "max-statements": "error",
@@ -84,10 +84,10 @@ module.exports = {
         "multiline-ternary": "error",
         "new-cap": "error",
         "new-parens": "error",
-        "newline-after-var": [
-            "error",
-            "never"
-        ],
+        // "newline-after-var": [
+        //     "error",
+        //     "never"
+        // ],
         "newline-before-return": "error",
         "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
         "no-alert": "error",

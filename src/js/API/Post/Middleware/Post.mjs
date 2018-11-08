@@ -2,6 +2,11 @@ import { REQUEST_POST, RECEIVE_POST, REQUEST_POST_ERROR } from '../Action/Post.m
 import { fetchRequest } from '../../Fetch/Action/Fetch.mjs';
 import WPRestHome from '../../../Util/WPRestHome.mjs';
 
+/**
+ * @param {Redux} store A Redux store
+ *
+ * @returns {Function} A `next` function
+ */
 export const getPost = store => next => action => {
     if (action.type === REQUEST_POST) {
         const postId = action.id;
