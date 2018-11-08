@@ -7,7 +7,7 @@ export const FETCH_REQUEST = '[API] Fetch Request';
  * @param {String} onSuccess On successful Action type
  * @param {String} onError On failure Action type
  *
- * @returns {undefined}
+ * @returns {Object} A Fetch action
  */
 export const fetchRequest = (method, url, body, onSuccess, onError) => ({
     meta: {
