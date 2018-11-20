@@ -1,6 +1,7 @@
 node_modules
 dist
 wp_uploads
+db_data
 
 etc/ssl/rootCA.key
 etc/ssl/rootCA.pem

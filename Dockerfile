@@ -1,4 +1,4 @@
-FROM wordpress:4.9.5-php7.2-apache
+FROM wordpress:4.9.8-php7.2-apache
 
 # https://this.localhost SSL
 # Point your network hosts to: 127.0.0.1  this.localhost

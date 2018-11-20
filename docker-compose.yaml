@@ -7,7 +7,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - mariadb:/var/lib/mysql
+      - ./db_data:/var/lib/mysql
+    command:
+      'mysqld --innodb-flush-method=fsync' # Fix for docker-on-windows-and-mariadb
 
   wordpress:
     container_name: newsy_wp
@@ -22,6 +24,3 @@ services:
       - ./wp_uploads:/var/www/html/wp-content/uploads
     depends_on:
       - mysql
-
-volumes:
-  mariadb:
