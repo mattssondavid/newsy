@@ -80,10 +80,10 @@ template.innerHTML = `
 `;
 
 const intersectionObserver = new IntersectionObserver(
-    (entries, _) => {
+    entries => {
         for (const entry of entries) {
-            if ((entry.isIntersecting || entry.intersectionRatio > 0)
-                && entry.target.offsetHeight > 0
+            if ((entry.isIntersecting || entry.intersectionRatio > 0) &&
+                entry.target.offsetHeight > 0
             ) {
                 entry.target.setAttribute('intersected', '');
             }
@@ -96,14 +96,12 @@ const intersectionObserver = new IntersectionObserver(
     }
 );
 
-const loadImage = src => {
-    return new Promise((resolve, reject) => {
-        const imageBuffer = new Image();
-        imageBuffer.onload = resolve;
-        imageBuffer.onerror = reject;
-        imageBuffer.src = src;
-    });
-};
+const loadImage = src => new Promise((resolve, reject) => {
+    const imageBuffer = new Image();
+    imageBuffer.onload = resolve;
+    imageBuffer.onerror = reject;
+    imageBuffer.src = src;
+});
 
 class ProgressiveImage extends HTMLElement {
     static get observedAttributes() {
@@ -112,7 +110,7 @@ class ProgressiveImage extends HTMLElement {
             'src',
             'height',
             'width',
-            'intersected',
+            'intersected'
         ];
     }
 
@@ -122,7 +120,7 @@ class ProgressiveImage extends HTMLElement {
             window.ShadyCSS.prepareTemplate(template, this.localName);
             window.ShadyCSS.styleElement(this);
         }
-        this.attachShadow({mode: 'open'});
+        this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         this._img = this.shadowRoot.querySelector('img');
@@ -168,24 +166,25 @@ class ProgressiveImage extends HTMLElement {
                         return;
                     }
                     loadImage(this.src)
-                    .then(_ => {
-                        this._img.src = this.src;
-                        if (this.src !== this.dataSrc) {
-                            this.preview = true;
-                            this.loaded = false;
-                        } else {
-                            this.preview = false;
-                            this.loaded = true;
-                        }
-                    })
-                    .then(_ => {
-                        if (!this.intersected
-                            && this.preview
-                            && !this.loaded
-                        ) {
-                            intersectionObserver.observe(this);
-                        }
-                    });
+                        .then(() => {
+                            this._img.src = this.src;
+                            if (this.src !== this.dataSrc) {
+                                this.preview = true;
+                                this.loaded = false;
+                            } else {
+                                this.preview = false;
+                                this.loaded = true;
+                            }
+                        })
+                        .then(() => {
+                            if (!this.intersected &&
+                                this.preview &&
+                                !this.loaded
+                            ) {
+                                intersectionObserver.observe(this);
+                            }
+                        })
+                        .catch(() => undefined);
                 }
                 break;
 
@@ -209,11 +208,11 @@ class ProgressiveImage extends HTMLElement {
                 }
                 if (this.loaded || (!this.src || !this.dataSrc)) {
                     intersectionObserver.unobserve(this);
+
                     return;
                 }
-                if (this.preview && (!!this.src && !!this.dataSrc)) {
+                if (this.preview && (Boolean(this.src) && Boolean(this.dataSrc))) {
                     this.src = this.dataSrc;
-                    return;
                 }
                 break;
 
@@ -302,7 +301,7 @@ class ProgressiveImage extends HTMLElement {
     }
 
     _liftAttribute(attribute) {
-        if (this.hasOwnProperty(attribute)) {
+        if (Object.prototype.hasOwnProperty.call(this, attribute)) {
             const originalAttribute = this[attribute];
             delete this[attribute];
             this[attribute] = originalAttribute;
