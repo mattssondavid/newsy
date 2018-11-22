@@ -79,23 +79,6 @@ template.innerHTML = `
     <img />
 `;
 
-const intersectionObserver = new IntersectionObserver(
-    entries => {
-        for (const entry of entries) {
-            if ((entry.isIntersecting || entry.intersectionRatio > 0) &&
-                entry.target.offsetHeight > 0
-            ) {
-                entry.target.setAttribute('intersected', '');
-            }
-        }
-    },
-    {
-        root: null,
-        rootMargin: '0px',
-        threshold: [0]
-    }
-);
-
 const loadImage = src => new Promise((resolve, reject) => {
     const imageBuffer = new Image();
     imageBuffer.onload = resolve;
@@ -124,6 +107,8 @@ class ProgressiveImage extends HTMLElement {
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
         this._img = this.shadowRoot.querySelector('img');
+
+        this._intersectionObserver = null;
     }
 
     connectedCallback() {
@@ -144,10 +129,12 @@ class ProgressiveImage extends HTMLElement {
         if (!this.hasAttribute('tabindex')) {
             this.setAttribute('tabindex', '0');
         }
+
+        this._createIntersectionObserver();
     }
 
     disconnectedCallback() {
-        intersectionObserver.unobserve(this);
+        this._destroyIntersectionObserver();
     }
 
     attributeChangedCallback(attrName, oldValue, newValue) {
@@ -166,25 +153,30 @@ class ProgressiveImage extends HTMLElement {
                         return;
                     }
                     loadImage(this.src)
-                        .then(() => {
-                            this._img.src = this.src;
-                            if (this.src !== this.dataSrc) {
-                                this.preview = true;
-                                this.loaded = false;
-                            } else {
-                                this.preview = false;
-                                this.loaded = true;
+                        .then(
+                            () => {
+                                // input: event type loaded
+                                this._img.src = this.src;
+                                if (this.src !== this.dataSrc) {
+                                    this.preview = true;
+                                    this.loaded = false;
+                                } else if (this.src === this.dataSrc) {
+                                    this.preview = false;
+                                    this.loaded = true;
+                                }
+
+                                if (!this.intersected && this.preview && !this.loaded) {
+                                    this._observeIntersection();
+                                }
+                            },
+                            () => {
+                                // input: event type error
+                                this._unobserveIntersection();
                             }
-                        })
-                        .then(() => {
-                            if (!this.intersected &&
-                                this.preview &&
-                                !this.loaded
-                            ) {
-                                intersectionObserver.observe(this);
-                            }
-                        })
-                        .catch(() => undefined);
+                        )
+                        .catch(() => {
+                            this._unobserveIntersection();
+                        });
                 }
                 break;
 
@@ -207,7 +199,7 @@ class ProgressiveImage extends HTMLElement {
                     return;
                 }
                 if (this.loaded || (!this.src || !this.dataSrc)) {
-                    intersectionObserver.unobserve(this);
+                    this._unobserveIntersection();
 
                     return;
                 }
@@ -305,6 +297,49 @@ class ProgressiveImage extends HTMLElement {
             const originalAttribute = this[attribute];
             delete this[attribute];
             this[attribute] = originalAttribute;
+        }
+    }
+
+    _createIntersectionObserver() {
+        if (this._intersectionObserver) {
+            return;
+        }
+
+        /**
+         * @param {[IntersectionObserverEntry]} entries
+         */
+        const observerCallback = entries => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                this.intersected = true;
+            }
+        };
+        this._intersectionObserver = new IntersectionObserver(
+            observerCallback,
+            {
+                root: null,
+                rootMargin: '0px',
+                threshold: [0]
+            }
+        );
+    }
+
+    _destroyIntersectionObserver() {
+        if (this._intersectionObserver) {
+            this._intersectionObserver.unobserve(this);
+            this._intersectionObserver.disconnect();
+            this._intersectionObserver = null;
+        }
+    }
+
+    _observeIntersection() {
+        if (this._intersectionObserver) {
+            this._intersectionObserver.observe(this);
+        }
+    }
+
+    _unobserveIntersection() {
+        if (this._intersectionObserver) {
+            this._intersectionObserver.unobserve(this);
         }
     }
 }
