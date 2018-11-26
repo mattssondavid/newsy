@@ -5,7 +5,8 @@ const fs = require('fs-extra');
 // Load Redux
 fs.copySync(
     path.resolve(__dirname, 'node_modules/redux/es/redux.mjs'),
-    path.resolve(__dirname, 'src/node_modules/redux/es/redux.mjs') // src so builder can find the file when following import path from index.mjs
+    path.resolve(__dirname, 'src/node_modules/redux/es/redux.mjs')
+    // Put in `src` so builder can find the file when following import path from index.mjs
 );
 
 // Load Web Components polyfill JS
@@ -21,7 +22,7 @@ fs.copySync(
 module.exports = {
     entry: path.resolve(__dirname, 'src/index.mjs'),
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'legacy.js'
-    },
-}
+        filename: 'legacy.js',
+        path: path.resolve(__dirname, 'dist')
+    }
+};
