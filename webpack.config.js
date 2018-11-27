@@ -21,6 +21,18 @@ fs.copySync(
 
 module.exports = {
     entry: path.resolve(__dirname, 'src/index.mjs'),
+    mode: 'development',
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
+                }
+            }
+        ]
+    },
     output: {
         filename: 'legacy.js',
         path: path.resolve(__dirname, 'dist')

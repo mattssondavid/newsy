@@ -19,7 +19,10 @@
   },
   "homepage": "https://github.com/mattssondavid/newsy#readme",
   "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
     "@webcomponents/webcomponentsjs": "^2.2.1",
+    "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^4.6.0",
     "fs-extra": "^7.0.1",
