@@ -5,7 +5,7 @@ import {
     combineReducers
 } from '../../../node_modules/redux/es/redux.mjs';
 
-import rootReducers from './Reducer.js';
+import rootReducers from './Reducer.mjs';
 import rootMiddlewares from './Middleware.mjs';
 
 // eslint-disable-next-line no-underscore-dangle
