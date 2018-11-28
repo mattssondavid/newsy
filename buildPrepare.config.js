@@ -1,3 +1,9 @@
+'use strict';
+
+/*
+ * Requires to be run through Node
+ */
+
 const path = require('path');
 const fs = require('fs-extra');
 
@@ -18,23 +24,3 @@ fs.copySync(
     path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs/bundles/'),
     path.resolve(__dirname, 'dist/node_modules/@webcomponents/webcomponentsjs/bundles/')
 );
-
-module.exports = {
-    entry: path.resolve(__dirname, 'src/index.mjs'),
-    mode: 'development',
-    module: {
-        rules: [
-            {
-                test: /(\.js|\.mjs)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader'
-                }
-            }
-        ]
-    },
-    output: {
-        filename: 'legacy.js',
-        path: path.resolve(__dirname, 'dist')
-    }
-};

@@ -4,9 +4,13 @@
   "description": "",
   "main": "./src/index.mjs",
   "scripts": {
-    "test": "node --experimental-modules --no-warnings src/tests.mjs | tap -Rspec -",
-    "build": "webpack && cp -rv src/* dist/ && cp -v src/.htaccess dist/",
-    "clean": "rm -r dist && mkdir dist"
+    "build": "npm run clean && npm run buildPrepare && npm run copySrc && npm run copyHtaccess && npm run bundle",
+    "buildPrepare": "node buildPrepare.config.js",
+    "bundle": "node node_modules/rollup/bin/rollup -c rollup.config.js",
+    "clean": "rm -r dist && mkdir dist",
+    "copyHtaccess": "cp -v src/.htaccess dist/",
+    "copySrc": "cp -rv src/* dist/",
+    "test": "node --experimental-modules --no-warnings src/tests.mjs | tap -Rspec -"
   },
   "repository": {
     "type": "git",
@@ -21,18 +25,20 @@
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@babel/preset-env": "^7.1.6",
-    "@webcomponents/webcomponentsjs": "^2.2.1",
-    "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "copy-webpack-plugin": "^4.6.0",
+    "eslint": "^5.9.0",
+    "eslint-plugin-promise": "^4.0.1",
     "fs-extra": "^7.0.1",
-    "redux": "^4.0.1",
+    "jslint": "^0.12.0",
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-node-resolve": "^3.4.0",
     "sinon": "^7.1.1",
-    "tap": "^11.1.5",
-    "webpack": "^4.26.1",
-    "webpack-cli": "^3.1.1"
+    "tap": "^11.1.5"
   },
   "dependencies": {
-    "jslint": "^0.12.0"
+    "@webcomponents/webcomponentsjs": "^2.2.1",
+    "redux": "^4.0.1"
   }
 }
