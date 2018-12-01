@@ -4,12 +4,10 @@
   "description": "",
   "main": "./src/index.mjs",
   "scripts": {
-    "build": "npm run clean && npm run buildPrepare && npm run copySrc && npm run copyHtaccess && npm run bundle",
+    "build": "npm run clean && npm run buildPrepare && npm run bundle",
     "buildPrepare": "node buildPrepare.config.js",
     "bundle": "node node_modules/rollup/bin/rollup -c rollup.config.js",
     "clean": "rm -r dist && mkdir dist",
-    "copyHtaccess": "cp -v src/.htaccess dist/",
-    "copySrc": "cp -rv src/* dist/",
     "test": "node --experimental-modules --no-warnings src/tests.mjs | tap -Rspec -"
   },
   "repository": {

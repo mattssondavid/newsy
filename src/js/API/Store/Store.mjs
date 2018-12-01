@@ -3,7 +3,7 @@ import {
     createStore,
     compose,
     combineReducers
-} from '../../../node_modules/redux/es/redux.mjs';
+} from '../../../../node_modules/redux/es/redux.mjs';
 
 import rootReducers from './Reducer.mjs';
 import rootMiddlewares from './Middleware.mjs';
