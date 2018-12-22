@@ -29,3 +29,6 @@ Add the file `rootCA.pem` in folder `etc/ssl` to your system's certificate manag
 The WordPress theme is dependent on NPM. Install NPM dependencies by running `npm install` in the root git repository folder.
 
 To "build" the theme run `npm build`.
+
+## If unable to use `upload` in WordPress
+WordPress has not access to the upload directory. In the container run `chown -R www-data:www-data wp-content/uploads/`
