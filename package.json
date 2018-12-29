@@ -10,7 +10,8 @@
     "bundleTest": "node_modules/rollup/bin/rollup -c rollup.test.bundle.config.js",
     "clean": "rm -r dist && mkdir dist",
     "lint": "eslint 'src/**/*.mjs'",
-    "karma": "npm run bundleTest && node_modules/karma/bin/karma start",
+    "karma": "npm run bundleTest && npm run karmaStart",
+    "karmaStart": "node_modules/karma/bin/karma start",
     "test": "node --experimental-modules --no-warnings 'src/tests.mjs' | tap -Rspec -",
     "mocha": "node --experimental-modules --no-warnings node_modules/mocha/bin/mocha 'src/**/*.test.mjs'"
   },
