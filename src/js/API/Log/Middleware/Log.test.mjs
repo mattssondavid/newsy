@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-expressions */
 import chai from 'chai';
-import tap from 'tap';
 import sinon from 'sinon';
 import { logToConsole } from './Log';
+/* Global methods: describe, it */
 
-const { mocha } = tap;
 const { expect } = chai;
 
 const thunk = ({ dispatch, getState }) => next => action => {
@@ -31,22 +30,22 @@ const create = () => {
     };
 };
 
-mocha.describe('Log middleware', () => {
-    mocha.it('passes through non-function action', () => {
+describe('Log middleware', () => {
+    it('passes through non-function action', () => {
         const { next, invoke } = create();
         const action = { type: 'test' };
         invoke(action);
         expect(next.calledWith(action)).to.be.true;
     });
 
-    mocha.it('calls the function', () => {
+    it('calls the function', () => {
         const { invoke } = create();
         const fn = sinon.spy();
         invoke(fn);
         expect(fn.called).to.be.true;
     });
 
-    mocha.it('passes dispatch and getState', () => {
+    it('passes dispatch and getState', () => {
         const { store, invoke } = create();
         invoke((dispatch, getState) => {
             dispatch('test');
@@ -56,7 +55,7 @@ mocha.describe('Log middleware', () => {
         expect(store.getState.called).to.be.true;
     });
 
-    mocha.it('can run logToConsole', () => {
+    it('can run logToConsole', () => {
         const { store, next } = create();
         const spied = sinon.spy(logToConsole);
         const invoke = action => spied(store)(next)(action);

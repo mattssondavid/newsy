@@ -1,52 +1,18 @@
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const multiEntry = require('rollup-plugin-multi-entry');
+const babel = require('rollup-plugin-babel');
+const replace = require('rollup-plugin-replace');
+
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['chai', 'tap'],
+    frameworks: ['mocha'],
     files: [
-      { pattern: 'src/**/tests.mjs', type: 'module' }
+      'testbuild/bundle.test.js'
     ],
     exclude: [
     ],
-		preprocessors: {
-      'src/**/*.mjs': ['rollup']
-		},
-		rollupPreprocessor: {
-      output: {
-        format: 'esm',
-        // name: 'karma-test',
-        // sourcemap: 'inline'
-      },
-      plugins: [
-        require('rollup-plugin-node-resolve')({
-          browser: true,
-          jsnext: true,
-          main: true
-        }),
-        require('rollup-plugin-commonjs')({
-          namedExports: {
-            'chai': ['expect'],
-            'tap': ['mocha']
-          }
-        }),
-        require('rollup-plugin-babel')({
-          babelrc: false,
-          exclude: 'node_modules/**',
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                targets: {
-                  esmodules: true
-                }
-              }
-            ]
-          ]
-        }),
-        require('rollup-plugin-replace')({
-            'process.env.NODE_ENV': JSON.stringify('production')
-        })
-      ]
-		},
     reporters: ['progress'],
     port: 9876,
     colors: true,

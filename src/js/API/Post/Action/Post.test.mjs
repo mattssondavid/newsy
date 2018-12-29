@@ -1,8 +1,7 @@
 import chai from 'chai';
-import tap from 'tap';
 import { requestPost, REQUEST_POST } from './Post.mjs';
+/* Global methods: describe, it */
 
-const { describe, it } = tap.mocha;
 const { expect } = chai;
 describe('Action.Post', () => {
     it('creates an action for requesting post', () => {

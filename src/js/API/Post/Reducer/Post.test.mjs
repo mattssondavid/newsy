@@ -1,16 +1,15 @@
 import chai from 'chai';
-import tap from 'tap';
 import {
     REQUEST_POST,
     RECEIVE_POST,
     REQUEST_POST_ERROR
 } from '../Action/Post.mjs';
 import { postReducer } from './Post.mjs';
+/* Global methods: describe, it */
 
-const { mocha } = tap;
 const { expect } = chai;
-mocha.describe('Reducer.Post', () => {
-    mocha.it('can reduce a RECEIVED post', () => {
+describe('Reducer.Post', () => {
+    it('can reduce a RECEIVED post', () => {
         expect(
             postReducer(
                 null,
@@ -50,7 +49,7 @@ mocha.describe('Reducer.Post', () => {
         );
     });
 
-    mocha.it('can reduce a REQUEST post', () => {
+    it('can reduce a REQUEST post', () => {
         expect(
             postReducer(
                 null,
@@ -66,7 +65,7 @@ mocha.describe('Reducer.Post', () => {
         );
     });
 
-    mocha.it('can reduce a REQUEST post ERROR', () => {
+    it('can reduce a REQUEST post ERROR', () => {
         expect(
             postReducer(
                 null,

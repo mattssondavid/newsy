@@ -5,3 +5,5 @@ db_data
 
 etc/ssl/rootCA.key
 etc/ssl/rootCA.pem
+
+testbuild
