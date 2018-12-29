@@ -7,3 +7,5 @@ etc/ssl/rootCA.key
 etc/ssl/rootCA.pem
 
 testbuild
+
+*.old
