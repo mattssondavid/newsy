@@ -8,7 +8,7 @@ export default [
     {
         input: 'src/**/*.test.mjs',
         output: {
-            file: 'testbuild/bundle.test.js',
+            file: 'testbuild/bundle.test.mjs',
             format: 'esm',
             sourcemap: true
         },

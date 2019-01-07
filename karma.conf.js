@@ -3,7 +3,8 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['mocha'],
     files: [
-      'testbuild/bundle.test.js'
+      'node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js',
+      { pattern: 'testbuild/bundle.test.mjs', type: 'module' }
     ],
     exclude: [
     ],
