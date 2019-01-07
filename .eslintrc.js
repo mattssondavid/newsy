@@ -28,7 +28,7 @@ module.exports = {
         "comma-dangle": "error",
         "comma-spacing": "error",
         "comma-style": "error",
-        "complexity": "error",
+        // "complexity": "error",
         "computed-property-spacing": "error",
         "consistent-return": "error",
         "consistent-this": "error",
@@ -228,7 +228,11 @@ module.exports = {
         "sort-keys": "error",
         "sort-vars": "error",
         "space-before-blocks": "error",
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": ["error", {
+            "anonymous": "never",
+            "named": "never",
+            "asyncArrow": "always"
+        }],
         "space-in-parens": [
             "error",
             "never"
