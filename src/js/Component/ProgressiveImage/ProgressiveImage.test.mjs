@@ -34,7 +34,7 @@ describe('ProgressiveImage', () => {
         const attributes = {
             src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=',
             intersected: true
-        }
+        };
         const node = await renderToDocument('progressive-img', attributes);
 
         expect(node.getAttribute('src')).to.equal(attributes.src);
@@ -47,6 +47,9 @@ describe('ProgressiveImage', () => {
             intersected: true
         };
         const node = await renderToDocument('progressive-img', attributes);
+        node.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+        // The DOM is not ready for the test assertion. We have to wait a bit.
+        await promisedRequestAnimationFrame();
 
         expect(node.loaded).to.equal(false);
         expect(node.preview).to.equal(true);
