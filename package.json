@@ -7,11 +7,11 @@
     "build": "npm run clean && npm run buildPrepare && npm run bundle",
     "buildPrepare": "node buildPrepare.config.js",
     "bundle": "node node_modules/rollup/bin/rollup -c rollup.config.js",
-    "bundleTest": "node_modules/rollup/bin/rollup -c rollup.test.bundle.config.js",
+    "bundleTest": "node node_modules/rollup/bin/rollup -c rollup.test.bundle.config.js",
     "clean": "rm -r dist && mkdir dist",
     "lint": "eslint 'src/**/*.mjs'",
     "karma": "npm run bundleTest && npm run karmaStart",
-    "karmaStart": "node_modules/karma/bin/karma start",
+    "karmaStart": "node node_modules/karma/bin/karma start",
     "test": "node --experimental-modules --no-warnings 'src/tests.mjs' | tap -Rspec -",
     "mocha": "node --experimental-modules --no-warnings node_modules/mocha/bin/mocha 'src/**/*.test.mjs'"
   },
