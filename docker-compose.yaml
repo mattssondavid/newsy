@@ -13,6 +13,7 @@ services:
 
   wordpress:
     container_name: newsy_wp
+    image: wp:newsy
     build: .
     ports:
       - 127.0.0.1:80:80
