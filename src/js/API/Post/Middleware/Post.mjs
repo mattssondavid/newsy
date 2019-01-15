@@ -5,7 +5,7 @@ import WPRestHome from '../../../Util/WPRestHome.mjs';
 /**
  * @param {Redux} store A Redux store
  *
- * @returns {Function} A `next` function
+ * @returns {Object} A state resulting from calling the `next` function
  */
 export const getPost = store => next => action => {
     if (action.type === REQUEST_POST) {
@@ -25,6 +25,58 @@ export const getPost = store => next => action => {
     return next(action);
 };
 
+/**
+ * Convert <img>-tag to <progressive-img>-tag
+ * @param {String} text
+ *
+ * @return {String} Text with replaced tag(s)
+ */
+const replaceFoundImgTagsWithProgressiveImgTag = text => {
+    const pattern = /<img([\W\w]*?)[/]?>/giu;
+
+    return text.replace(pattern, '<progressive-img $1></progressive-img>');
+};
+
+/**
+ * @returns {Object} A state resulting from calling the `next` function
+ */
+export const convertImgTagToProgressiveImgTag = () => next => action => {
+    if (action.type === RECEIVE_POST) {
+        if (!(
+            action &&
+            action.payload &&
+            action.payload.content &&
+            action.payload.excerpt)
+        ) {
+            return next(action);
+        }
+
+        const content = {
+            ...action.payload.content,
+            rendered: replaceFoundImgTagsWithProgressiveImgTag(action.payload.content.rendered)
+        };
+
+        const excerpt = {
+            ...action.payload.excerpt,
+            rendered: replaceFoundImgTagsWithProgressiveImgTag(action.payload.excerpt.rendered)
+        };
+
+        const payload = {
+            ...action.payload,
+            content,
+            excerpt
+        };
+
+        return next({
+            ...action,
+            payload
+        });
+    }
+
+    return next(action);
+};
+
 export const postMiddleware = [
-    getPost
+    getPost,
+    convertImgTagToProgressiveImgTag
 ];
