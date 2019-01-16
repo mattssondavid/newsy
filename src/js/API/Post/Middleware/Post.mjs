@@ -34,7 +34,7 @@ export const getPost = store => next => action => {
 const replaceFoundImgTagsWithProgressiveImgTag = text => {
     const pattern = /<img([\W\w]*?)[/]?>/giu;
 
-    return text.replace(pattern, '<progressive-img $1></progressive-img>');
+    return text.replace(pattern, '<progressive-img$1></progressive-img>');
 };
 
 /**
