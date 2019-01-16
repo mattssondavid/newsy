@@ -3,7 +3,7 @@ import { FETCH_REQUEST } from '../Action/Fetch.mjs';
 /**
  * @param {Redux} store A Redux store
  *
- * @returns {Function} A `next` function
+ * @returns {Object} A state resulting from calling the `next` function
  */
 export const api = store => next => action => {
     if (action.type === FETCH_REQUEST) {

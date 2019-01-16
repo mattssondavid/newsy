@@ -2,7 +2,7 @@
 /**
  * @param {Redux} store A Redux store
  *
- * @returns {Function} A `next` function
+ * @returns {Object} A state resulting from calling the `next` function
  */
 export const logToConsole = store => next => action => {
     console.group(action.type);
