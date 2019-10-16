@@ -1,12 +1,12 @@
 import chai from 'chai';
 /* Global methods: describe, it */
-import {} from './ProgressiveImage.mjs';
+import {} from './ProgressiveImage.js';
 
 import {
     renderToDocument,
     removeElements,
     promisedRequestAnimationFrame
-} from '../../../../test/WebComponent/TestUtil.mjs';
+} from '../../../../test/WebComponent/TestUtil.js';
 
 const { expect } = chai;
 

@@ -1,5 +1,5 @@
 import chai from 'chai';
-import { requestPost, REQUEST_POST } from './Post.mjs';
+import { requestPost, REQUEST_POST } from './Post.js';
 /* Global methods: describe, it */
 
 const { expect } = chai;

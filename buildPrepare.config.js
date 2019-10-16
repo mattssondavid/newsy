@@ -32,7 +32,7 @@ fs.copy(
             }
             if ((/.+[A-Za-z-_]+\..+/u).test(src)) {
                 // Skip any .mjs or .js file
-                return !(/(?:\.mjs)|(?:\.js)$/u).test(src);
+                return !(/(?:\.mjs)|(?:\.js)|(?:\.ts)$/u).test(src);
             }
 
             return true;

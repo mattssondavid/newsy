@@ -7,7 +7,7 @@ export default [
 
     /* JS Module */
     {
-        input: 'src/index.mjs',
+        input: 'build/src/index.js',
         output: {
             file: 'dist/index.mjs',
             format: 'esm',
@@ -42,7 +42,7 @@ export default [
 
     /* Legacy support */
     {
-        input: 'src/index.mjs',
+        input: 'build/src/index.js',
         output: {
             file: 'dist/legacy.js',
             format: 'iife',

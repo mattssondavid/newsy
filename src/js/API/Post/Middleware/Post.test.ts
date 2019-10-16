@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import chai from 'chai';
 import sinon from 'sinon';
-import { RECEIVE_POST } from '../Action/Post.mjs';
-import { convertImgTagToProgressiveImgTag } from './Post.mjs';
+import { RECEIVE_POST } from '../Action/Post.js';
+import { convertImgTagToProgressiveImgTag } from './Post.js';
 /* Global methods: describe, it */
 
 const { expect } = chai;

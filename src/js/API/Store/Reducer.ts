@@ -1,4 +1,4 @@
-import { postReducer as post } from '../Post/Reducer/Post.mjs';
+import { postReducer as post } from '../Post/Reducer/Post.js';
 
 const rootReducers = [
     post

@@ -1,6 +1,6 @@
-import { REQUEST_POST, RECEIVE_POST, REQUEST_POST_ERROR } from '../Action/Post.mjs';
-import { fetchRequest } from '../../Fetch/Action/Fetch.mjs';
-import WPRestHome from '../../../Util/WPRestHome.mjs';
+import { REQUEST_POST, RECEIVE_POST, REQUEST_POST_ERROR } from '../Action/Post.js';
+import { fetchRequest } from '../../Fetch/Action/Fetch.js';
+import WPRestHome from '../../../Util/WPRestHome.js';
 
 /**
  * @param {Redux} store A Redux store

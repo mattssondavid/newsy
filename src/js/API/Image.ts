@@ -1,4 +1,4 @@
-import WPRestHome from '../Util/WPRestHome.mjs';
+import WPRestHome from '../Util/WPRestHome.js';
 
 export const getImage = (id) => fetch(`${WPRestHome}wp/v2/media/${id}`)
     .then(response => {

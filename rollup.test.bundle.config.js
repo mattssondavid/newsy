@@ -6,7 +6,7 @@ import replace from 'rollup-plugin-replace';
 
 export default [
     {
-        input: 'src/**/*.test.mjs',
+        input: 'build/src/**/*.test.js',
         output: {
             file: 'testbuild/bundle.test.mjs',
             format: 'esm',

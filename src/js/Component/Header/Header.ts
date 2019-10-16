@@ -1,6 +1,6 @@
-import customElements from '../../Util/CustomElements.mjs';
+import customElements from '../../Util/CustomElements.js';
 
-class Hero extends HTMLElement {
+class Header extends HTMLElement {
     static get observedAttributes() {
         return [];
     }
@@ -18,6 +18,6 @@ class Hero extends HTMLElement {
     attributeChangedCallback(attrName, oldValue, newValue) {
     }
 }
-customElements.define('newsy-hero', Hero);
+customElements.define('newsy-header', Header);
 
-export default Hero;
+export default Header;

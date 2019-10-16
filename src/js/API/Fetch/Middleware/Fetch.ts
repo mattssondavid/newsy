@@ -1,4 +1,4 @@
-import { FETCH_REQUEST } from '../Action/Fetch.mjs';
+import { FETCH_REQUEST } from '../Action/Fetch.js';
 
 /**
  * @param {Redux} store A Redux store

@@ -2,7 +2,7 @@ import {
     REQUEST_POST,
     RECEIVE_POST,
     REQUEST_POST_ERROR
-} from '../Action/Post.mjs';
+} from '../Action/Post.js';
 
 const initPostState = {};
 

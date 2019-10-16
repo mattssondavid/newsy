@@ -3,6 +3,8 @@
 <newsy-teaser
     id="<?= get_the_id(); ?>"
 ></newsy-teaser>
+<?php
+/*
 <article>
     <?php if (has_post_thumbnail()) {
         $thumbnail_post = get_post(get_post_thumbnail_id());
@@ -43,3 +45,4 @@ $author_name = get_the_author();
     ><?= $author_name; ?></a></p>
     </footer>
 </article>
+*/

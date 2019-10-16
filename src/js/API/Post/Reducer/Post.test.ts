@@ -3,8 +3,8 @@ import {
     REQUEST_POST,
     RECEIVE_POST,
     REQUEST_POST_ERROR
-} from '../Action/Post.mjs';
-import { postReducer } from './Post.mjs';
+} from '../Action/Post.js';
+import { postReducer } from './Post.js';
 /* Global methods: describe, it */
 
 const { expect } = chai;

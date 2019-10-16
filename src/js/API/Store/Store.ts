@@ -5,8 +5,8 @@ import {
     combineReducers
 } from '../../../../node_modules/redux/es/redux.js'; // The redux.mjs does NOT work in Edge
 
-import rootReducers from './Reducer.mjs';
-import rootMiddlewares from './Middleware.mjs';
+import rootReducers from './Reducer.js';
+import rootMiddlewares from './Middleware.js';
 
 // eslint-disable-next-line no-underscore-dangle
 const devCompose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

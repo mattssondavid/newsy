@@ -1,4 +1,4 @@
-import WPRestHome from '../Util/WPRestHome.mjs';
+import WPRestHome from '../Util/WPRestHome.js';
 
 export function getPosts() {
     const path = 'wp/v2/posts';

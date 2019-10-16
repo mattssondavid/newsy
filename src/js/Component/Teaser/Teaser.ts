@@ -1,7 +1,7 @@
-import customElements from '../../Util/CustomElements.mjs';
-import {getPosts} from '../../API/Post.mjs';
-import {getPost} from '../../API/Post.mjs';
-import {getImage} from '../../API/Image.mjs';
+import customElements from '../../Util/CustomElements.js';
+import {getPosts} from '../../API/Post.js';
+import {getPost} from '../../API/Post.js';
+import {getImage} from '../../API/Image.js';
 
 const template = document.createElement('template');
 template.innerHTML = `

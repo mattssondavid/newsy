@@ -3,6 +3,7 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import { logToConsole } from './Log';
+import { AssertionError } from 'assert';
 /* Global methods: describe, it */
 
 const { expect } = chai;
