@@ -79,7 +79,7 @@ template.innerHTML = `
     <img />
 `;
 
-const loadImage = src => new Promise((resolve, reject) => {
+const loadImage = (src: string) => new Promise<HTMLImageElement>((resolve: Function, reject: Function) => {
     const imageBuffer = new Image();
     imageBuffer.onload = resolve;
     imageBuffer.onerror = reject;
@@ -87,6 +87,9 @@ const loadImage = src => new Promise((resolve, reject) => {
 });
 
 class ProgressiveImage extends HTMLElement {
+    private _img: HTMLImageElement;
+    private _intersectionObserver: IntersectionObserver|null;
+
     static get observedAttributes() {
         return [
             'alt',
@@ -99,14 +102,10 @@ class ProgressiveImage extends HTMLElement {
 
     constructor() {
         super();
-        if (window.ShadyCSS) {
-            window.ShadyCSS.prepareTemplate(template, this.localName);
-            window.ShadyCSS.styleElement(this);
-        }
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this._img = this.shadowRoot.querySelector('img');
+        this._img = shadowRoot.querySelector('img')!;
 
         this._intersectionObserver = null;
     }
@@ -137,13 +136,16 @@ class ProgressiveImage extends HTMLElement {
         this._destroyIntersectionObserver();
     }
 
-    attributeChangedCallback(attrName, oldValue, newValue) {
+    attributeChangedCallback(attrName: string, oldValue: string|null, newValue: string|null) {
         const hasNewValue = newValue !== null;
         const valueHasChanged = oldValue !== newValue;
         switch (attrName) {
             case 'alt':
                 if (hasNewValue && valueHasChanged) {
-                    this._img.setAttribute('alt', newValue);
+                    this._img.setAttribute(
+                        'alt',
+                        newValue ? newValue : ''
+                    );
                 }
                 break;
 
@@ -183,14 +185,20 @@ class ProgressiveImage extends HTMLElement {
             case 'height':
                 if (hasNewValue && valueHasChanged) {
                     this.style.height = `${newValue}px`;
-                    this._img.setAttribute('height', newValue);
+                    this._img.setAttribute(
+                        'height',
+                        newValue ? newValue : ''
+                    );
                 }
                 break;
 
             case 'width':
                 if (hasNewValue && valueHasChanged) {
                     this.style.width = `${newValue}px`;
-                    this._img.setAttribute('width', newValue);
+                    this._img.setAttribute(
+                        'width',
+                        newValue ? newValue : ''
+                    );
                 }
                 break;
 
@@ -213,36 +221,35 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
-    get alt() {
-        return this.getAttribute('alt');
+    get alt(): string {
+        return this.getAttribute('alt') || '';
     }
 
-    set alt(value) {
+    set alt(value: string) {
         this.setAttribute('alt', value);
     }
 
-    get dataSrc() {
-        return this.dataset.src || "";
+    get dataSrc(): string {
+        return this.dataset.src || '';
     }
 
-    set dataSrc(value) {
+    set dataSrc(value: string) {
         this.setAttribute('data-src', value);
     }
 
-    get height() {
-        return this.getAttribute('height');
+    get height(): string {
+        return this.getAttribute('height') || '';
     }
 
-    set height(value) {
+    set height(value: string) {
         this.setAttribute('height', value);
     }
 
-    get intersected() {
+    get intersected(): Boolean {
         return this.hasAttribute('intersected');
     }
 
-    set intersected(value) {
-        const isIntersected = Boolean(value);
+    set intersected(isIntersected: Boolean) {
         if (isIntersected) {
             this.setAttribute('intersected', '');
         } else {
@@ -250,12 +257,11 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
-    get loaded() {
+    get loaded(): Boolean {
         return this.hasAttribute('loaded');
     }
 
-    set loaded(value) {
-        const isLoaded = Boolean(value);
+    set loaded(isLoaded: Boolean) {
         if (isLoaded) {
             this.setAttribute('loaded', '');
         } else {
@@ -263,12 +269,11 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
-    get preview() {
+    get preview(): Boolean {
         return this.hasAttribute('preview');
     }
 
-    set preview(value) {
-        const isPreview = Boolean(value);
+    set preview(isPreview: Boolean) {
         if (isPreview) {
             this.setAttribute('preview', '');
         } else {
@@ -276,23 +281,23 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
-    get src() {
-        return this.getAttribute('src') || "";
+    get src(): string {
+        return this.getAttribute('src') || '';
     }
 
-    set src(value) {
+    set src(value: string) {
         this.setAttribute('src', value);
     }
 
-    get width() {
-        return this.getAttribute('width');
+    get width(): string {
+        return this.getAttribute('width') || '';
     }
 
-    set width(value) {
+    set width(value: string) {
         this.setAttribute('width', value);
     }
 
-    _liftAttribute(attribute) {
+    private _liftAttribute(attribute: any) {
         if (Object.prototype.hasOwnProperty.call(this, attribute)) {
             const originalAttribute = this[attribute];
             delete this[attribute];
@@ -300,7 +305,7 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
-    _createIntersectionObserver() {
+    private _createIntersectionObserver() {
         if (this._intersectionObserver) {
             return;
         }
@@ -308,7 +313,7 @@ class ProgressiveImage extends HTMLElement {
         /**
          * @param {[IntersectionObserverEntry]} entries
          */
-        const observerCallback = entries => {
+        const observerCallback = (entries: IntersectionObserverEntry[]) => {
             if (entries.some(entry => entry.isIntersecting)) {
                 this.intersected = true;
             }
@@ -323,7 +328,7 @@ class ProgressiveImage extends HTMLElement {
         );
     }
 
-    _destroyIntersectionObserver() {
+    private _destroyIntersectionObserver() {
         if (this._intersectionObserver) {
             this._intersectionObserver.unobserve(this);
             this._intersectionObserver.disconnect();
@@ -331,13 +336,13 @@ class ProgressiveImage extends HTMLElement {
         }
     }
 
-    _observeIntersection() {
+    private _observeIntersection() {
         if (this._intersectionObserver) {
             this._intersectionObserver.observe(this);
         }
     }
 
-    _unobserveIntersection() {
+    private _unobserveIntersection() {
         if (this._intersectionObserver) {
             this._intersectionObserver.unobserve(this);
         }
