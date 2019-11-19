@@ -81,8 +81,8 @@ template.innerHTML = `
 
 const loadImage = (src: string) => new Promise<HTMLImageElement>((resolve: Function, reject: Function) => {
     const imageBuffer = new Image();
-    imageBuffer.onload = resolve;
-    imageBuffer.onerror = reject;
+    imageBuffer.onload = resolve();
+    imageBuffer.onerror = reject(event);
     imageBuffer.src = src;
 });
 
@@ -297,11 +297,17 @@ class ProgressiveImage extends HTMLElement {
         this.setAttribute('width', value);
     }
 
-    private _liftAttribute(attribute: any) {
-        if (Object.prototype.hasOwnProperty.call(this, attribute)) {
-            const originalAttribute = this[attribute];
-            delete this[attribute];
-            this[attribute] = originalAttribute;
+    /**
+     * Lift the attribute which may cause a trigger to ´attributeChangedCallback´
+     * for observered attributes
+     *
+     * @param {string} attribute The attribute to lift
+     */
+    private _liftAttribute(attribute: string) {
+        const originalAttribute = this.attributes.getNamedItem(attribute);
+        if (originalAttribute) {
+            this.attributes.removeNamedItem(attribute);
+            this.attributes.setNamedItem(originalAttribute);
         }
     }
 
